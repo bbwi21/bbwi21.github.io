@@ -400,67 +400,52 @@
     background:radial-gradient(120% 90% at 50% 40%,rgba(255,255,255,0) 62%,rgba(255,241,247,.34) 100%);
   }
 
-  /* 움직이는 비서 캐릭터 (3D 클레이 피규어) */
-  .agent-layer{position:absolute;inset:0;z-index:10;pointer-events:none}
-  .agent{
-    position:absolute;transform:translate(-50%,-100%);
-    transition-property:left,top;
-    transition-duration:3s;transition-timing-function:cubic-bezier(.4,0,.3,1);
-    pointer-events:auto;cursor:pointer;border:0;background:none;padding:0;
-    display:flex;flex-direction:column;align-items:center;
+  /* 자리에 앉은 비서 캐릭터 · 히트박스 + 말풍선 */
+  .seat-layer{position:absolute;inset:0;z-index:12;pointer-events:none}
+  .seat-hit{
+    position:absolute;border:0;margin:0;padding:0;background:transparent;
+    border-radius:20px;pointer-events:auto;cursor:pointer;
     -webkit-tap-highlight-color:transparent;
+    transition:background .2s ease, box-shadow .2s ease;
   }
-  .agent:focus-visible{outline:2px solid #f4a0c6;outline-offset:6px;border-radius:16px}
-  .agent-body{position:relative;display:flex;flex-direction:column;align-items:center}
-  .agent-img{
-    position:relative;z-index:1;display:block;
-    height:clamp(30px,4.6vw,56px);width:auto;
-    filter:drop-shadow(0 5px 7px rgba(150,90,120,.24));
-    transition:transform .25s ease;
+  .seat-hit:hover{background:radial-gradient(58% 58% at 50% 56%,rgba(255,255,255,.3),rgba(255,255,255,0) 72%)}
+  .seat-hit:active{background:radial-gradient(58% 58% at 50% 56%,rgba(255,206,228,.42),rgba(255,255,255,0) 74%)}
+  .seat-hit:focus-visible{outline:2px solid #f4a0c6;outline-offset:2px;border-radius:16px}
+  .seat-hit.talk{animation:seatPulse 1.3s ease-out 1}
+  @keyframes seatPulse{
+    0%{box-shadow:0 0 0 0 rgba(244,160,198,.5)}
+    100%{box-shadow:0 0 0 16px rgba(244,160,198,0)}
   }
-  .agent:hover .agent-img{transform:translateY(-2px) scale(1.04)}
-  .agent-shadow{
-    position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);
-    width:70%;height:8px;border-radius:50%;
-    background:radial-gradient(closest-side,rgba(150,95,120,.34),rgba(150,95,120,0));
-  }
-  .agent-name{
-    position:absolute;top:calc(100% + 3px);left:50%;transform:translateX(-50%);
-    font-size:clamp(8px,1.05vw,10.5px);font-weight:800;letter-spacing:-.01em;
-    color:#6f4157;background:rgba(255,255,255,.95);
-    padding:2px 8px;border-radius:999px;white-space:nowrap;
-    border:1px solid rgba(251,220,234,.9);
-    box-shadow:0 2px 7px rgba(196,86,140,.18);
-    z-index:3;
-  }
-  .agent.walking .agent-img{animation:agentWalk .62s ease-in-out infinite}
-  .agent.breathe .agent-img{animation:agentBreathe 3.4s ease-in-out infinite}
-  .agent.hop .agent-img{animation:agentHop .5s ease}
-  @keyframes agentBreathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
-  @keyframes agentWalk{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-4px) rotate(2deg)}}
-  @keyframes agentHop{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-10px) scale(1.07)}70%{transform:translateY(0) scale(.97)}100%{transform:translateY(0) scale(1)}}
 
-  .agent-bubble{
-    position:absolute;bottom:calc(100% + 3px);left:50%;
-    transform:translate(-50%,4px) scale(.94);
-    background:#fff;color:#7a3d59;border:1px solid #fbd6e6;border-radius:12px;
-    padding:5px 9px;font-size:9.5px;font-weight:700;line-height:1.35;
-    white-space:normal;text-align:center;width:max-content;
-    box-shadow:0 8px 18px rgba(196,86,140,.2);
-    opacity:0;pointer-events:none;transition:.22s;z-index:5;max-width:168px;
+  .seat-bubble{
+    position:absolute;z-index:235;transform:translate(-50%,-100%) scale(.92);
+    transform-origin:50% 100%;
+    background:#fff;color:#5d3b4c;border:1px solid #f8d5e5;border-radius:13px;
+    padding:5px 9px;font-size:9.5px;font-weight:700;line-height:1.4;
+    width:max-content;max-width:142px;text-align:center;white-space:normal;
+    box-shadow:0 8px 20px rgba(150,80,110,.2);
+    opacity:0;pointer-events:none;
+    transition:opacity .2s ease, transform .24s cubic-bezier(.34,1.4,.6,1);
   }
-  .agent-bubble::after{
+  .seat-bubble::after{
     content:"";position:absolute;left:50%;bottom:-5px;width:8px;height:8px;background:#fff;
-    border-right:1px solid #fbd6e6;border-bottom:1px solid #fbd6e6;
+    border-right:1px solid #f8d5e5;border-bottom:1px solid #f8d5e5;
     transform:translateX(-50%) rotate(45deg);border-bottom-right-radius:2px;
   }
-  .agent-bubble.show{opacity:1;transform:translate(-50%,0) scale(1)}
-  .agent.side-left .agent-bubble{left:auto;right:-6px;transform:translate(0,4px) scale(.94)}
-  .agent.side-left .agent-bubble.show{transform:translate(0,0) scale(1)}
-  .agent.side-left .agent-bubble::after{left:auto;right:14px;transform:rotate(45deg)}
-  .agent.side-right .agent-bubble{left:-6px;right:auto;transform:translate(0,4px) scale(.94)}
-  .agent.side-right .agent-bubble.show{transform:translate(0,0) scale(1)}
-  .agent.side-right .agent-bubble::after{left:14px;transform:rotate(45deg)}
+  .seat-bubble.show{opacity:1;transform:translate(-50%,-100%) scale(1)}
+
+  .map-label.char{font-size:9.5px;padding:5px 9px}
+  .office-stage.live .map-label i{animation:dotPulse 2.4s ease-in-out infinite}
+  @keyframes dotPulse{
+    0%,100%{box-shadow:0 0 0 2.5px rgba(74,222,128,.2)}
+    45%{box-shadow:0 0 0 5px rgba(74,222,128,0)}
+  }
+  .map-label.talk{animation:labelTalk .7s ease}
+  @keyframes labelTalk{
+    0%,100%{transform:translate(-50%,-50%) rotate(0)}
+    30%{transform:translate(-50%,-50%) rotate(-2.4deg) scale(1.06)}
+    65%{transform:translate(-50%,-50%) rotate(1.8deg) scale(1.03)}
+  }
 
   /* 방 라벨 (다크 반투명 알약) */
   .map-label{
@@ -685,10 +670,9 @@
     .ws-intro{padding:13px 13px 12px;border-radius:20px}
     .st-chip{font-size:10.5px;padding:7px 11px}
     .office-cta{font-size:10px;padding:7px 10px}
-    .agent-name{font-size:8px;padding:1.5px 6px}
-    .agent-img{height:clamp(26px,4.8vw,44px)}
-    .agent-bubble{font-size:9px;padding:4px 7px;max-width:130px}
+    .seat-bubble{font-size:8.5px;padding:4px 7px;max-width:118px;border-radius:11px}
     .map-label{font-size:9.5px;padding:5px 9px;gap:5px}
+    .map-label.char{font-size:9px;padding:4px 8px}
     .office-foot{padding:9px 10px}
     .office-foot-note{font-size:9px}
   }
@@ -743,15 +727,29 @@
 
       <div class="office-card">
         <div class="office-stage" id="officeStage">
-          <img class="office-img" id="officeImg" src="./office-map-v2.png?v=15" alt="민선 님 비서실 3D 클레이 오피스" draggable="false">
-          <div class="agent-layer" id="agentLayer"></div>
-          <button class="map-label" type="button" data-room="assembly" style="left:25%;top:44%" aria-label="대회의실로 이동"><i aria-hidden="true"></i>대회의실</button>
-          <button class="map-label" type="button" data-room="command" style="left:55%;top:30%" aria-label="지휘실로 이동"><i aria-hidden="true"></i>지휘실</button>
-          <button class="map-label" type="button" data-room="work" style="left:65%;top:61%" aria-label="업무존으로 이동"><i aria-hidden="true"></i>업무존</button>
-          <button class="map-label" type="button" data-room="lounge" style="left:76%;top:69%" aria-label="라운지로 이동"><i aria-hidden="true"></i>라운지</button>
+          <img class="office-img" id="officeImg" src="./office-map-v3.png?v=16" alt="민선 님 비서실 3D 클레이 오피스 — 다섯 비서가 각자 의자에 앉아 근무 중" draggable="false">
+          <div class="seat-layer" id="seatLayer">
+            <button class="seat-hit" type="button" data-agent="mong" style="left:48.2%;top:21%;width:9.6%;height:16.4%" aria-label="몽이 자세히 보기"></button>
+            <button class="seat-hit" type="button" data-agent="sunny" style="left:32.8%;top:43%;width:10%;height:14%" aria-label="써니 비서 자세히 보기"></button>
+            <button class="seat-hit" type="button" data-agent="han" style="left:49.8%;top:47.5%;width:10.2%;height:15%" aria-label="한결 비서 자세히 보기"></button>
+            <button class="seat-hit" type="button" data-agent="daon" style="left:26.5%;top:54%;width:9.4%;height:14.4%" aria-label="다온 비서 자세히 보기"></button>
+            <button class="seat-hit" type="button" data-agent="byul" style="left:43.5%;top:62.3%;width:11%;height:14.4%" aria-label="별하 비서 자세히 보기"></button>
+            <span class="seat-bubble" data-bubble="mong" role="status" style="left:53%;top:20.4%"></span>
+            <span class="seat-bubble" data-bubble="sunny" role="status" style="left:37.5%;top:42%"></span>
+            <span class="seat-bubble" data-bubble="han" role="status" style="left:55%;top:46.4%"></span>
+            <span class="seat-bubble" data-bubble="daon" role="status" style="left:30.5%;top:53%"></span>
+            <span class="seat-bubble" data-bubble="byul" role="status" style="left:48.5%;top:61%"></span>
+          </div>
+          <button class="map-label room" type="button" data-room="assembly" style="left:18%;top:40%" aria-label="대회의실로 이동"><i aria-hidden="true"></i>대회의실</button>
+          <button class="map-label char" type="button" data-agent="mong" style="left:57%;top:36%" aria-label="몽이 자세히 보기"><i aria-hidden="true"></i>지휘실 · 몽이</button>
+          <button class="map-label char" type="button" data-agent="sunny" style="left:34%;top:57%" aria-label="써니 비서 자세히 보기"><i aria-hidden="true"></i>써니 비서</button>
+          <button class="map-label char" type="button" data-agent="han" style="left:62%;top:57.5%" aria-label="한결 비서 자세히 보기"><i aria-hidden="true"></i>한결 비서</button>
+          <button class="map-label char" type="button" data-agent="daon" style="left:24%;top:69%" aria-label="다온 비서 자세히 보기"><i aria-hidden="true"></i>다온 비서</button>
+          <button class="map-label char" type="button" data-agent="byul" style="left:48%;top:77%" aria-label="별하 비서 자세히 보기"><i aria-hidden="true"></i>별하 비서</button>
+          <button class="map-label room" type="button" data-room="lounge" style="left:83%;top:75%" aria-label="라운지로 이동"><i aria-hidden="true"></i>라운지</button>
         </div>
         <div class="office-foot">
-          <span class="office-foot-note">🪄 클레이 3D 오피스 · 공간이나 캐릭터를 눌러 보세요</span>
+          <span class="office-foot-note">🪄 다섯 비서가 자리에 앉아 근무 중 · 캐릭터나 공간을 눌러 보세요</span>
           <button class="office-cta" id="officeCta" type="button">💬 지휘실에서 지시하기</button>
         </div>
       </div>
@@ -2454,25 +2452,19 @@
     toast("메모를 저장했어요 📝");
   }
 
-  /* ── 오피스 맵 · 움직이는 비서 캐릭터 ───────── */
+  /* ── 오피스 맵 · 자리에 앉아 일하는 비서 캐릭터 ───────── */
   var OFFICE_ZONE_NAME = {assembly:"대회의실", command:"지휘실", work:"업무존", lounge:"라운지"};
   var OFFICE_ZONE_TO = {assembly:"대회의실로", command:"지휘실로", work:"업무존으로", lounge:"라운지로"};
-  var OFFICE_ZONES = {
-    assembly: [[16,42],[30,34],[37,53],[20,60],[31,63]],
-    command:  [[47,41],[51,45],[59,44],[65,40]],
-    work:     [[47,52],[53,58],[61,53],[69,47],[74,55]],
-    lounge:   [[60,66],[64,72],[70,72]]
-  };
   var AGENTS = [
-    {id:"mong",  name:"몽이",      role:"비서실장 · 총괄",       img:"./char-mong.png?v=15",  zone:"command",
-     lines:["민선 님, 다들 잘 돌아가고 있어요 🌸","지휘실에서 보고 준비 중이에요","필요한 일은 저에게 말씀만 하세요!"]},
-    {id:"sunny", name:"써니 비서", role:"체험단 · 블로그",        img:"./char-sunny.png?v=15", zone:"assembly",
+    {id:"mong",  name:"몽이",      role:"비서실장 · 총괄",  img:"./char-mong.png?v=16",  zone:"command", chat:"command",  mention:"@몽이",
+     lines:["민선 님, 다들 잘 돌아가고 있어요 🌸","지휘실에서 결산 보고 준비 중이에요","필요한 일은 저에게 말씀만 하세요!"]},
+    {id:"sunny", name:"써니 비서", role:"체험단 · 블로그",  img:"./char-sunny.png?v=16", zone:"work",    chat:"assembly", mention:"@써니비서",
      lines:["체험단 26건 정리 중이에요 ✍️","43번지 준비물 목록 만들게요!","블로그 초안 다듬고 있어요 ☺️"]},
-    {id:"han",   name:"한결 비서", role:"재무 · 자금",            img:"./char-han.png?v=15",   zone:"work",
+    {id:"han",   name:"한결 비서", role:"재무 · 자금",      img:"./char-han.png?v=16",   zone:"work",    chat:"command",  mention:"@한결비서",
      lines:["월말 자금 마감 체크 중이에요 💼","자금일보 다시 맞춰볼게요!","11/30 세무 마감 준비 완료!"]},
-    {id:"daon",  name:"다온 비서", role:"청약 · 생활",            img:"./char-daon.png?v=15",  zone:"lounge",
+    {id:"daon",  name:"다온 비서", role:"청약 · 생활",      img:"./char-daon.png?v=16",  zone:"work",    chat:"lounge",   mention:"@다온비서",
      lines:["투룸 청약 오늘도 0건이에요 🏠","히로시마 일정 살펴보는 중!","달러박스 알림 대기하고 있어요"]},
-    {id:"byul",  name:"별하 비서", role:"사주 · 택일",            img:"./char-byul.png?v=15",  zone:"assembly",
+    {id:"byul",  name:"별하 비서", role:"사주 · 택일",      img:"./char-byul.png?v=16",  zone:"work",    chat:"assembly", mention:"@별하비서",
      lines:["2028-09-23 택일 표 정리했어요 🔮","오늘 일진 살펴보는 중이에요","원국 펴 두고 기다릴게요 ✨"]}
   ];
 
@@ -2483,94 +2475,54 @@
 
   function rand(a, b){ return a + Math.random() * (b - a); }
 
-  function crowdDistance(x, y, self){
-    var best = 999;
-    officeAgents.forEach(function(o){
-      if(o === self) return;
-      var dx = o.x - x, dy = (o.y - y) * 1.25;
-      var d = Math.sqrt(dx * dx + dy * dy);
-      if(d < best) best = d;
-    });
-    return best;
-  }
-
-  function zoneCount(zone){
-    var n = 0;
-    officeAgents.forEach(function(o){ if(o.def.zone === zone) n++; });
-    return n;
-  }
-
-  function spotFor(zone, self){
-    var spots = OFFICE_ZONES[zone] || OFFICE_ZONES.assembly;
-    var best = null, bestD = -1;
-    for(var i = 0; i < 14; i++){
-      var s = spots[Math.floor(Math.random() * spots.length)];
-      var x = Math.max(10, Math.min(87, s[0] + rand(-1.2, 1.2)));
-      var y = Math.max(26, Math.min(74, s[1] + rand(-1.2, 1.2)));
-      var d = crowdDistance(x, y, self);
-      if(d >= 11) return [x, y];
-      if(d > bestD){ bestD = d; best = [x, y]; }
-    }
-    return best || [40, 60];
-  }
-
-  function bubbleSide(st){
-    st.el.classList.toggle("side-left", st.x > 74);
-    st.el.classList.toggle("side-right", st.x < 26);
-  }
-
   function buildOffice(){
-    var layer = document.getElementById("agentLayer");
-    if(!layer || layer.getAttribute("data-built") === "1") return;
-    layer.setAttribute("data-built", "1");
+    if(officeAgents.length) return;
     AGENTS.forEach(function(a){
-      var elx = document.createElement("button");
-      elx.type = "button";
-      elx.className = "agent breathe";
-      elx.setAttribute("aria-label", a.name + " 상세 보기");
-      elx.innerHTML =
-        '<span class="agent-bubble" role="status"></span>' +
-        '<span class="agent-body">' +
-          '<span class="agent-shadow" aria-hidden="true"></span>' +
-          '<img class="agent-img" src="' + a.img + '" alt="" aria-hidden="true" draggable="false">' +
-          '<span class="agent-name">' + a.name + '</span>' +
-        '</span>';
-      var s = spotFor(a.zone, null);
-      elx.style.transitionDuration = "0s";
-      elx.style.left = s[0] + "%";
-      elx.style.top = s[1] + "%";
-      elx.style.zIndex = String(100 + Math.round(s[1]));
-      layer.appendChild(elx);
-      var st = {
-        def:a, el:elx, bubble:elx.querySelector(".agent-bubble"),
-        x:s[0], y:s[1], next:0, bubbleTimer:null, walkTimer:null, paused:false
-      };
+      var hit   = document.querySelector('.seat-hit[data-agent="' + a.id + '"]');
+      var label = document.querySelector('.map-label[data-agent="' + a.id + '"]');
+      var bub   = document.querySelector('.seat-bubble[data-bubble="' + a.id + '"]');
+      var st = {def:a, hit:hit, label:label, bubble:bub, bubbleTimer:null, next:0};
       officeAgents.push(st);
-      bubbleSide(st);
-      elx.addEventListener("click", function(e){ e.stopPropagation(); greetAgent(st); });
-      elx.addEventListener("pointerenter", function(){ st.paused = true; });
-      elx.addEventListener("pointerleave", function(){ st.paused = false; });
-      elx.addEventListener("keydown", function(e){
-        if(e.key === "Enter" || e.key === " "){ e.preventDefault(); greetAgent(st); }
-      });
-      requestAnimationFrame(function(){ elx.style.transitionDuration = "3s"; });
+      if(hit) hit.addEventListener("click", function(e){ e.stopPropagation(); greetAgent(st); });
+      if(label) label.addEventListener("click", function(e){ e.stopPropagation(); greetAgent(st); });
     });
   }
 
-  function showBubble(st, text){
+  function showBubble(st, text, ms){
+    if(!st || !st.bubble) return;
     st.bubble.textContent = text;
     st.bubble.classList.add("show");
     clearTimeout(st.bubbleTimer);
-    st.bubbleTimer = setTimeout(function(){ st.bubble.classList.remove("show"); }, 3600);
+    st.bubbleTimer = setTimeout(function(){ st.bubble.classList.remove("show"); }, ms || 3600);
+  }
+
+  function hideBubble(st){
+    if(!st || !st.bubble) return;
+    clearTimeout(st.bubbleTimer);
+    st.bubble.classList.remove("show");
+  }
+
+  function pulseSeat(st){
+    if(st.hit){
+      st.hit.classList.remove("talk");
+      void st.hit.offsetWidth;
+      st.hit.classList.add("talk");
+      setTimeout(function(){ st.hit.classList.remove("talk"); }, 1360);
+    }
+    if(st.label){
+      st.label.classList.remove("talk");
+      void st.label.offsetWidth;
+      st.label.classList.add("talk");
+      setTimeout(function(){ st.label.classList.remove("talk"); }, 780);
+    }
   }
 
   function greetAgent(st){
+    if(!st) return;
     var lines = st.def.lines;
+    officeAgents.forEach(function(o){ if(o !== st) hideBubble(o); });
     showBubble(st, lines[Math.floor(Math.random() * lines.length)]);
-    st.el.classList.remove("hop");
-    void st.el.offsetWidth;
-    st.el.classList.add("hop");
-    setTimeout(function(){ st.el.classList.remove("hop"); }, 560);
+    pulseSeat(st);
     openAgentCard(st);
   }
 
@@ -2595,17 +2547,27 @@
 
     var where = el("div", "ap-where");
     where.appendChild(el("i", null, ""));
-    where.appendChild(document.createTextNode("지금 " + OFFICE_ZONE_NAME[st.def.zone] + "에서 근무 중"));
+    where.appendChild(document.createTextNode("지금 " + OFFICE_ZONE_NAME[st.def.zone] + " 책상에서 근무 중"));
     var line = el("p", "ap-line", st.def.lines[0]);
 
-    var go = el("button", "ap-go", st.def.zone === "work" ? "작업실 열기 →" : OFFICE_ZONE_NAME[st.def.zone] + "에서 대화하기 →");
+    var go = el("button", "ap-go", "💬 " + st.def.name + "와 대화하기 →");
     go.type = "button";
     go.addEventListener("click", function(e){
       e.stopPropagation();
-      var zone = st.def.zone;
+      var room = st.def.chat;
+      var mention = st.def.mention;
+      var nm = st.def.name;
       closeAgentCard();
-      if(zone === "work"){ switchTab("work"); toast("업무존 · 작업실로 이동했어요"); }
-      else { goOfficeRoom(zone); }
+      state.room = room;
+      saveState();
+      renderRoom();
+      switchTab("meeting");
+      if(chatInput){
+        chatInput.value = mention + " ";
+        autoGrow();
+        chatInput.focus();
+      }
+      toast(OFFICE_ZONE_NAME[room] + "에서 " + nm + "와 대화를 시작해요 💬");
     });
 
     pop.appendChild(head); pop.appendChild(where); pop.appendChild(line); pop.appendChild(go);
@@ -2621,54 +2583,42 @@
     popTimer = setTimeout(function(){ if(!pop.classList.contains("show")) pop.textContent = ""; }, 220);
   }
 
-  function moveAgent(st){
-    var zones = Object.keys(OFFICE_ZONES);
-    var zone = st.def.zone;
-    if(Math.random() < 0.55){
-      var others = zones.filter(function(z){ return z !== zone && zoneCount(z) < 2; });
-      if(others.length) zone = others[Math.floor(Math.random() * others.length)];
-    }
-    st.def.zone = zone;
-    var s = spotFor(zone, st);
-    st.x = s[0]; st.y = s[1];
-    bubbleSide(st);
-    st.el.style.zIndex = String(100 + Math.round(st.y));
-    var dur = rand(2.8, 3.6);
-    st.el.style.transitionDuration = dur.toFixed(2) + "s";
-    st.el.classList.add("walking");
-    st.el.style.left = st.x + "%";
-    st.el.style.top = st.y + "%";
-    clearTimeout(st.walkTimer);
-    st.walkTimer = setTimeout(function(){ st.el.classList.remove("walking"); }, dur * 1000 + 80);
-  }
-
   function officeTick(){
     var now = Date.now();
+    var talking = false;
     officeAgents.forEach(function(st){
-      if(now >= st.next){
-        if(st.paused){ st.next = now + 900; return; }
-        moveAgent(st);
-        st.next = now + rand(4200, 6400);
-      }
+      if(st.bubble && st.bubble.classList.contains("show")) talking = true;
+    });
+    officeAgents.forEach(function(st){
+      if(now < st.next) return;
+      st.next = now + rand(4600, 8800);
+      if(talking) return;
+      talking = true;
+      var lines = st.def.lines;
+      showBubble(st, lines[Math.floor(Math.random() * lines.length)], 3800);
+      pulseSeat(st);
     });
   }
 
   function startOffice(){
     buildOffice();
+    var stage = document.getElementById("officeStage");
+    if(stage) stage.classList.add("live");
     if(state.motionOn === false) return;
     if(officeTimer) return;
     var now = Date.now();
-    officeAgents.forEach(function(st, i){
-      if(!st.next || st.next < now) st.next = now + 900 + i * 1300;
-    });
-    officeTimer = setInterval(officeTick, 700);
+    officeAgents.forEach(function(st, i){ st.next = now + 1500 + i * 2400; });
+    officeTimer = setInterval(officeTick, 1000);
   }
 
   function stopOffice(){
     if(officeTimer){ clearInterval(officeTimer); officeTimer = null; }
+    var stage = document.getElementById("officeStage");
+    if(stage) stage.classList.remove("live");
     officeAgents.forEach(function(st){
-      st.el.classList.remove("walking");
-      clearTimeout(st.walkTimer);
+      hideBubble(st);
+      if(st.hit) st.hit.classList.remove("talk");
+      if(st.label) st.label.classList.remove("talk");
     });
   }
 
@@ -2770,10 +2720,9 @@
         var x = (e.clientX - r.left) / r.width * 100;
         var y = (e.clientY - r.top) / r.height * 100;
         var room;
-        if(x < 40) room = "assembly";
-        else if(y < 38) room = "command";
-        else if(x > 72 && y > 48) room = "lounge";
-        else if(y > 68) room = "lounge";
+        if(x < 33) room = "assembly";
+        else if(y < 37 && x > 40) room = "command";
+        else if(x > 72 && y > 58) room = "lounge";
         else room = "work";
         closeAgentCard();
         goSpot(room);
