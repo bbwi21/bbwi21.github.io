@@ -370,7 +370,7 @@
   /* 움직이는 비서 캐릭터 */
   .agent-layer{position:absolute;inset:0;z-index:3;pointer-events:none}
   .agent{
-    position:absolute;width:clamp(34px,4.4vw,52px);transform:translate(-50%,-50%);
+    position:absolute;width:clamp(32px,3.9vw,46px);transform:translate(-50%,-50%);
     transition-property:left,top;transition-duration:3s;transition-timing-function:cubic-bezier(.42,0,.28,1);
     pointer-events:auto;cursor:pointer;border:0;background:none;padding:0;
     display:flex;flex-direction:column;align-items:center;
@@ -389,7 +389,7 @@
   }
   .agent-av{
     width:100%;aspect-ratio:1/1;border-radius:50%;display:grid;place-items:center;
-    font-size:clamp(19px,2.9vw,34px);line-height:1;border:2px solid #fff;
+    font-size:clamp(17px,2.5vw,29px);line-height:1;border:2px solid #fff;
     box-shadow:0 5px 12px rgba(196,86,140,.26),inset 0 -4px 8px rgba(255,255,255,.75),inset 0 2px 6px rgba(255,255,255,.55);
   }
   .agent-name{
@@ -1244,10 +1244,35 @@
 
   function rand(a, b){ return a + Math.random() * (b - a); }
 
-  function spotFor(zone){
+  function crowdDistance(x, y, self){
+    var best = 999;
+    officeAgents.forEach(function(o){
+      if(o === self) return;
+      var dx = o.x - x, dy = (o.y - y) * 1.25;
+      var d = Math.sqrt(dx * dx + dy * dy);
+      if(d < best) best = d;
+    });
+    return best;
+  }
+
+  function zoneCount(zone){
+    var n = 0;
+    officeAgents.forEach(function(o){ if(o.def.zone === zone) n++; });
+    return n;
+  }
+
+  function spotFor(zone, self){
     var spots = OFFICE_ZONES[zone] || OFFICE_ZONES.assembly;
-    var s = spots[Math.floor(Math.random() * spots.length)];
-    return [ Math.max(9, Math.min(90, s[0] + rand(-1.6, 1.6))), Math.max(8, Math.min(90, s[1] + rand(-1.6, 1.6))) ];
+    var best = null, bestD = -1;
+    for(var i = 0; i < 14; i++){
+      var s = spots[Math.floor(Math.random() * spots.length)];
+      var x = Math.max(9, Math.min(88, s[0] + rand(-1.4, 1.4)));
+      var y = Math.max(8, Math.min(84, s[1] + rand(-1.4, 1.4)));
+      var d = crowdDistance(x, y, self);
+      if(d >= 9.5) return [x, y];
+      if(d > bestD){ bestD = d; best = [x, y]; }
+    }
+    return best || [30, 70];
   }
 
   function bubbleSide(st){
@@ -1271,7 +1296,7 @@
           '<span class="agent-name">' + a.name + '</span>' +
           '<span class="agent-shadow" aria-hidden="true"></span>' +
         '</span>';
-      var s = spotFor(a.zone);
+      var s = spotFor(a.zone, null);
       el.style.transitionDuration = "0s";
       el.style.left = s[0] + "%";
       el.style.top = s[1] + "%";
@@ -1310,11 +1335,11 @@
     var zones = Object.keys(OFFICE_ZONES);
     var zone = st.def.zone;
     if(Math.random() < 0.72){
-      var others = zones.filter(function(z){ return z !== zone; });
-      zone = others[Math.floor(Math.random() * others.length)];
+      var others = zones.filter(function(z){ return z !== zone && zoneCount(z) < 2; });
+      if(others.length) zone = others[Math.floor(Math.random() * others.length)];
     }
     st.def.zone = zone;
-    var s = spotFor(zone);
+    var s = spotFor(zone, st);
     st.x = s[0]; st.y = s[1];
     bubbleSide(st);
     var dur = rand(2.6, 3.4);
