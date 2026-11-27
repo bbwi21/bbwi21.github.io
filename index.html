@@ -1193,7 +1193,7 @@
     var box = document.getElementById("aiStatus");
     var txt = document.getElementById("aiStatusText");
     var sw = document.getElementById("aiSwitch");
-    if(sw) sw.setAttribute("aria-checked", aiCfg.enabled ? "true" : "false");
+    if(sw) sw.setAttribute("aria-checked", (aiCfg.enabled && aiCfg.key) ? "true" : "false");
     if(!box || !txt) return;
     var on = aiReady();
     box.classList.toggle("on", on);
@@ -1250,7 +1250,9 @@
 
     var sw = document.getElementById("aiSwitch");
     if(sw) sw.addEventListener("click", function(){
-      aiCfg.enabled = !aiCfg.enabled;
+      var on = !!(aiCfg.enabled && aiCfg.key);
+      if(!on && !aiCfg.key){ toast("Gemini 키를 먼저 저장해 주세요"); return; }
+      aiCfg.enabled = !on;
       saveAiCfg();
       paintAiStatus();
       paintAiBadge();
