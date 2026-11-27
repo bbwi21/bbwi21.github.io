@@ -2456,6 +2456,7 @@
 
   /* ── 오피스 맵 · 움직이는 비서 캐릭터 ───────── */
   var OFFICE_ZONE_NAME = {assembly:"대회의실", command:"지휘실", work:"업무존", lounge:"라운지"};
+  var OFFICE_ZONE_TO = {assembly:"대회의실로", command:"지휘실로", work:"업무존으로", lounge:"라운지로"};
   var OFFICE_ZONES = {
     assembly: [[16,42],[30,34],[37,53],[20,60],[31,63]],
     command:  [[47,41],[51,45],[59,44],[65,40]],
@@ -2699,7 +2700,7 @@
     saveState();
     renderRoom();
     switchTab("meeting");
-    toast(OFFICE_ZONE_NAME[room] + "(으)로 이동했어요 ✨");
+    toast((OFFICE_ZONE_TO[room] || OFFICE_ZONE_NAME[room] + "으로") + " 이동했어요 ✨");
   }
 
   function goSpot(room){
