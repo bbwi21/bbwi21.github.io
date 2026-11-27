@@ -435,7 +435,7 @@
   .seat-bubble.show{opacity:1;transform:translate(-50%,-100%) scale(1)}
 
   .map-label.char{font-size:9.5px;padding:5px 9px}
-  .office-stage.live .map-label i{animation:dotPulse 2.4s ease-in-out infinite}
+  .office-stage.motion-live .map-label i{animation:dotPulse 2.4s ease-in-out infinite}
   @keyframes dotPulse{
     0%,100%{box-shadow:0 0 0 2.5px rgba(74,222,128,.2)}
     45%{box-shadow:0 0 0 5px rgba(74,222,128,0)}
@@ -2603,7 +2603,7 @@
   function startOffice(){
     buildOffice();
     var stage = document.getElementById("officeStage");
-    if(stage) stage.classList.add("live");
+    if(stage) stage.classList.add("motion-live");
     if(state.motionOn === false) return;
     if(officeTimer) return;
     var now = Date.now();
@@ -2614,7 +2614,7 @@
   function stopOffice(){
     if(officeTimer){ clearInterval(officeTimer); officeTimer = null; }
     var stage = document.getElementById("officeStage");
-    if(stage) stage.classList.remove("live");
+    if(stage) stage.classList.remove("motion-live");
     officeAgents.forEach(function(st){
       hideBubble(st);
       if(st.hit) st.hit.classList.remove("talk");
