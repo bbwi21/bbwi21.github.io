@@ -464,6 +464,104 @@
 
   .foot{text-align:center;font-size:10.5px;color:#a9808f;margin:14px 0 0;line-height:1.6}
 
+  /* ── AI 연결 버튼 · 모달 ─────────────────── */
+  .head-right{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+  .ai-btn{
+    display:inline-flex;align-items:center;gap:5px;
+    font-size:11.5px;font-weight:800;color:#a8396f;
+    background:linear-gradient(180deg,#fff,#ffeaf4);
+    border:1px solid #f9cfe3;border-radius:999px;
+    padding:6px 11px;cursor:pointer;white-space:nowrap;
+    box-shadow:0 3px 10px rgba(244,114,182,.16);
+    transition:.16s;-webkit-tap-highlight-color:transparent;
+  }
+  .ai-btn:hover{background:linear-gradient(180deg,#fff,#ffdcec);border-color:#f4a8c9;transform:translateY(-1px)}
+  .ai-btn:active{transform:scale(.97)}
+  .ai-btn .ai-ic{font-size:12px;line-height:1}
+  .ai-btn.on{color:#2f8a63;background:linear-gradient(180deg,#fff,#e9f9f1);border-color:#c8f0dc;box-shadow:0 3px 10px rgba(76,191,143,.16)}
+
+  .modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:16px}
+  .modal[hidden]{display:none}
+  .modal-back{position:absolute;inset:0;background:rgba(90,43,63,.32);backdrop-filter:blur(3px)}
+  .modal-card{
+    position:relative;z-index:1;width:100%;max-width:420px;max-height:88vh;overflow-y:auto;
+    background:#fff;border:1px solid #ffe1ee;border-radius:24px;
+    box-shadow:0 26px 60px rgba(142,43,87,.26);
+    padding:20px 20px 18px;animation:modalIn .2s ease;
+  }
+  @keyframes modalIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .modal-head h3{margin:0;font-size:16px;font-weight:800;color:var(--rose);letter-spacing:-.02em}
+  .modal-x{
+    width:30px;height:30px;flex:0 0 30px;border-radius:50%;border:1px solid #fbdcea;background:#fff7fb;
+    color:#a8396f;font-size:16px;line-height:1;cursor:pointer;display:grid;place-items:center;
+  }
+  .modal-x:hover{background:#ffe9f2}
+  .modal-lead{margin:9px 0 14px;font-size:11.5px;color:var(--muted);line-height:1.65}
+  .ai-status{
+    display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;
+    padding:9px 12px;border-radius:14px;margin-bottom:14px;line-height:1.45;
+    color:#8f6b7e;background:#f8f3f6;border:1px solid #eee3ea;
+  }
+  .ai-status.on{color:#2f8a63;background:#e9f9f1;border-color:#c8f0dc}
+  .ai-status .sdot{width:7px;height:7px;border-radius:50%;background:#bca9b4;flex:0 0 7px}
+  .ai-status.on .sdot{background:var(--green);box-shadow:0 0 0 0 rgba(76,191,143,.5);animation:pulse 2.2s infinite}
+  .fld{display:block;margin-bottom:8px}
+  .fld-label{display:block;font-size:11px;font-weight:800;color:#7a3d59;margin-bottom:6px}
+  .key-row{position:relative;display:block}
+  .key-row input{
+    width:100%;height:44px;padding:0 46px 0 13px;border-radius:14px;
+    border:1px solid #f9cfe3;background:#fffafc;color:var(--ink);
+    font-size:13px;font-family:inherit;letter-spacing:.02em;
+  }
+  .key-row input:focus{background:#fff;border-color:#f4a0c6;box-shadow:0 0 0 3px rgba(244,160,198,.18);outline:none}
+  .key-row .eye{
+    position:absolute;right:6px;top:6px;width:32px;height:32px;border-radius:10px;
+    border:none;background:#ffeef5;color:#a8396f;font-size:13px;cursor:pointer;display:grid;place-items:center;
+  }
+  .key-row .eye:hover{background:#ffdcec}
+  .key-link{display:inline-block;margin:2px 0 14px;font-size:11px;font-weight:700;color:#c04f8c;text-decoration:none}
+  .key-link:hover{text-decoration:underline}
+  .ai-toggle-row{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:10px 13px;border-radius:14px;background:#fff7fb;border:1px solid var(--line-soft);
+    font-size:11.5px;font-weight:800;color:#7a3d59;margin-bottom:12px;
+  }
+  .switch{
+    width:44px;height:25px;flex:0 0 44px;border-radius:999px;border:1px solid #fbdcea;
+    background:#f3e6ee;position:relative;cursor:pointer;padding:0;transition:.18s;
+  }
+  .switch span{
+    position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 3px rgba(90,43,63,.25);transition:.18s;
+  }
+  .switch[aria-checked="true"]{background:linear-gradient(135deg,#ffa8c8,#f472b6);border-color:#f4a0c6}
+  .switch[aria-checked="true"] span{left:21px}
+  .security{
+    margin:0 0 14px;font-size:10.5px;line-height:1.65;color:#8f6b7e;
+    background:#f3fbf7;border:1px solid #d8f0e4;border-radius:12px;padding:9px 11px;
+  }
+  .modal-btns{display:flex;gap:8px}
+  .btn-primary{
+    flex:1 1 auto;height:42px;border-radius:14px;border:none;cursor:pointer;
+    background:linear-gradient(135deg,#ff9dc0,#f472b6);color:#fff;font-size:12.5px;font-weight:800;
+    box-shadow:0 8px 18px rgba(244,114,182,.28);
+  }
+  .btn-primary:hover{filter:brightness(1.03)}
+  .btn-primary:active{transform:scale(.98)}
+  .btn-ghost{
+    flex:0 0 auto;height:42px;padding:0 15px;border-radius:14px;cursor:pointer;
+    border:1px solid #fbdcea;background:#fff7fb;color:#a8396f;font-size:12px;font-weight:800;
+  }
+  .btn-ghost:hover{background:#ffe9f2;border-color:#f4a8c9}
+  @media(max-width:560px){
+    .head-right{gap:6px}
+    .ai-btn{font-size:10px;padding:5px 8px;gap:4px}
+    .modal{padding:12px;align-items:flex-end}
+    .modal-card{padding:17px 16px 16px;border-radius:22px;max-height:90vh}
+    .fld-label{font-size:10.5px}
+  }
+
   .toast{
     position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
     background:#8e2b57;color:#fff;font-size:12px;font-weight:700;
@@ -526,7 +624,10 @@
           </p>
         </div>
       </div>
-      <div class="live warn" id="syncBadge" title="실시간 DB 연결 상태"><span class="dot" aria-hidden="true"></span><span id="syncText">연결 중…</span></div>
+      <div class="head-right">
+        <button class="ai-btn" id="aiBtn" type="button" aria-haspopup="dialog" aria-controls="aiModal" aria-label="AI 연결 설정"><span class="ai-ic" aria-hidden="true">⚙️</span><span id="aiBtnText">AI 연결</span></button>
+        <div class="live warn" id="syncBadge" title="실시간 DB 연결 상태"><span class="dot" aria-hidden="true"></span><span id="syncText">연결 중…</span></div>
+      </div>
     </header>
 
     <nav class="tabs" role="tablist" aria-label="비서실 메뉴">
@@ -647,6 +748,41 @@
   <p class="foot">민선 님만의 작은 비서실 · 입력한 내용은 실시간 DB에 저장되어 모든 기기에서 함께 보여요</p>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ⚙️ AI 연결 모달 (Gemini 전용 · 키는 이 브라우저에만 저장) -->
+<div class="modal" id="aiModal" role="dialog" aria-modal="true" aria-labelledby="aiModalTitle" hidden>
+  <div class="modal-back" id="aiBack"></div>
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="aiModalTitle">⚙️ AI 연결</h3>
+      <button class="modal-x" id="aiClose" type="button" aria-label="닫기">×</button>
+    </div>
+    <p class="modal-lead">Google Gemini API 키를 연결하면 다섯 비서가 진짜 AI로 답해요. 키가 없을 때는 지금처럼 기본 모드로 잘 동작합니다.</p>
+
+    <div class="ai-status" id="aiStatus"><span class="sdot" aria-hidden="true"></span><span id="aiStatusText">아직 연결되지 않았어요 · 기본 모드</span></div>
+
+    <label class="fld" for="geminiKey">
+      <span class="fld-label">Gemini API Key</span>
+      <span class="key-row">
+        <input id="geminiKey" type="password" placeholder="AIza… 로 시작하는 키" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button class="eye" id="eyeBtn" type="button" aria-label="키 보기" aria-pressed="false">👁</button>
+      </span>
+    </label>
+    <a class="key-link" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">🔗 Google AI Studio에서 무료 키 발급받기</a>
+
+    <div class="ai-toggle-row">
+      <span>Gemini 연결 켜기</span>
+      <button class="switch" id="aiSwitch" type="button" role="switch" aria-checked="true" aria-label="Gemini 연결 켜기"><span aria-hidden="true"></span></button>
+    </div>
+
+    <p class="security">🔒 입력하신 API 키는 이 기기(브라우저)에만 안전하게 저장되며, 서버나 실시간 DB에는 올라가지 않습니다.</p>
+
+    <div class="modal-btns">
+      <button class="btn-primary" id="aiSave" type="button">저장</button>
+      <button class="btn-ghost" id="aiClear" type="button">키 삭제</button>
+    </div>
+  </div>
+</div>
 
 <!-- Firebase 실시간 DB (compat SDK) -->
 <script src="https://www.gstatic.com/firebasejs/13.4.0/firebase-app-compat.js"></script>
@@ -958,6 +1094,336 @@
     toast._tm = setTimeout(function(){ t.classList.remove("show"); }, 1700);
   }
 
+  /* ── AI 연결 (Google Gemini) ───────────────── */
+  /* 키는 오직 이 브라우저의 localStorage에만 저장합니다. Firebase RTDB에는 올리지 않습니다. */
+  var AI_STORE = "minseon.ai.config.v1";
+  var GEMINI_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash"];
+  var aiCfg = {key:"", enabled:true};
+
+  var MINSEON_CTX =
+    "민선 님 기본 맥락(늘 염두에 둘 것):\n" +
+    "- 김민선 님, 1996년 11월 6일(양력) 오후 12시 16분 출생. 서울 관악구 거주, 본가는 경북 구미.\n" +
+    "- 직장은 대교홀딩스 재무팀 대리(4년차). 2026년 11월부터 강원심층수 회계·자금 담당으로 이동.\n" +
+    "- 남자친구는 1996년 5월 30일생(ENTP), 2027년 상반기 카페 오픈 준비 중, 2028년 9월 결혼 예정.\n" +
+    "- 2027년 2월 6~8일 히로시마 4인 여행(항공·호텔 예약 완료, 1/28 자동결제·1/30 무료취소 기한).\n" +
+    "- 프로농구 SK 나이츠 팬, 생김치류를 좋아함, 사주·명리 상담을 자주 함.\n";
+
+  var AI_RULES =
+    "\n답변 규칙:\n" +
+    "- 반드시 한국어 존댓말. 2~4문장, 300자 이내로 짧고 자연스럽게 답합니다.\n" +
+    "- 마크다운 기호(**, #, -) 없이 평문으로. 목록이 꼭 필요하면 1) 2) 형태로 한 줄씩.\n" +
+    "- 확인한 사실과 추측을 구분하고, 모르는 것은 지어내지 말고 '확인해서 알려드릴게요'라고 말합니다.\n" +
+    "- 결제·예약·전화·이체처럼 민선 님 확인이 필요한 일은 실행하지 않고, 무엇을 확인하면 되는지 짧게 안내합니다.\n" +
+    "- 주민번호·카드번호 같은 민감정보를 요구하거나 기억하지 않습니다.\n" +
+    "- 자기소개나 역할 설명을 늘어놓지 말고 물어본 것에 바로 답합니다.\n";
+
+  var AI_SYSTEM = {
+    mong:
+      "당신은 김민선 님의 전용 비서실에서 총괄 실장을 맡는 '몽이'입니다. 밝고 다정하며 재치 있는 존댓말을 씁니다.\n" +
+      "역할은 다섯 비서(써니·한결·다온·별하)의 보고를 한곳에 묶어 정리하고, 일정 조율과 모닝 브리핑(매일 오전 7시 날씨·환율·재무 이슈·옷차림 추천)을 챙기는 것입니다.\n" +
+      "민선 님을 '민선 님'이라 부르고, 가끔 문장 끝에 🌸를 붙입니다. 다섯 명을 대표해 말할 때는 누가 무엇을 맡는지 짧게 짚어 줍니다.\n" +
+      MINSEON_CTX + AI_RULES,
+
+    sunny:
+      "당신은 김민선 님의 전용 비서실에서 '써니 비서'로 일합니다. 체험단·리뷰·블로그(써니로그) 담당입니다.\n" +
+      "말투는 밝고 꼼꼼하며, 문장 끝에 가끔 ✍️를 붙입니다. 일정과 마감일을 숫자로 콕 집어 말하는 습관이 있습니다.\n" +
+      "지키는 기준: 체험단은 관악·동작·서초·강남 4개 구, 요식업이나 물건, 12월 20일 이후 체험 가능한 건만 신청합니다. 운동·피트니스(크로스핏·헬스·PT·복싱·요가·필라테스)는 신청하지 않고, 먼 지역과 혼자 가야 하는 곳도 제외합니다.\n" +
+      "리뷰는 구매한 건을 5점으로 자연스럽게 쓰고, 블로그는 사진 흐름을 살린 짧은 문장으로 써니로그 문체를 유지합니다.\n" +
+      MINSEON_CTX + AI_RULES,
+
+    han:
+      "당신은 김민선 님의 전용 비서실에서 '한결 비서'로 일합니다. 재무·자금 담당입니다.\n" +
+      "말투는 차분하고 논리적이며 실무 톤입니다. 숫자와 일정을 먼저 짚고 결론을 뒤에 붙입니다. 가끔 💼를 씁니다.\n" +
+      "다루는 일: 일일자금시재·자금일보·1개년 추정 대시보드, 월말 결산과 원천세·법인세 중간예납 일정, 환율·금리 동향, 2027년 KPI 사업계획서.\n" +
+      "실제 이체·결제는 하지 않습니다. 필요한 금액과 일정을 정리해 보고하고 승인을 받는 것이 원칙입니다.\n" +
+      MINSEON_CTX + AI_RULES,
+
+    daon:
+      "당신은 김민선 님의 전용 비서실에서 '다온 비서'로 일합니다. 청약·생활 케어 담당입니다.\n" +
+      "말투는 따뜻하고 세심하며, 민선 님 컨디션과 일정을 먼저 챙기는 존댓말을 씁니다. 가끔 🏠를 붙입니다.\n" +
+      "청약은 투룸 이상만 보고, 보증금·월세·관리비·전세 전환 가능 금액을 한 줄로 정리합니다. 원룸·1.5룸은 제외하고, 당첨 후 미계약 시 청약 기회가 제한되는 공고는 신청 전에 먼저 알립니다.\n" +
+      "건강검진 추적(유방 초음파·B형간염 예방접종)과 히로시마 여행 잔여 일정, 달러박스 알림도 챙깁니다. 진단이나 처방은 의료진 몫이라고 분명히 말합니다.\n" +
+      MINSEON_CTX + AI_RULES,
+
+    byul:
+      "당신은 김민선 님의 전용 비서실에서 '별하 비서'로 일합니다. 사주·명리 담당입니다.\n" +
+      "말투는 차분하고 신비로운 존댓말입니다. 단정하지 않고 '~로 읽힙니다'처럼 여지를 두고 말하며, 가끔 🔮를 붙입니다.\n" +
+      "민선 님 원국은 丙子년 戊戌월 丁未일 丙午시, 정화 일간에 식상이 발달한 명식입니다. 신랑은 정묘일주 무신시로 상관생재 구조입니다.\n" +
+      "결혼 택일 1순위는 2028년 9월 23일(토) 辛亥日(해묘미 삼합), 2순위 9/16 甲辰, 3순위 9/17 乙巳 손 없는 날, 10월은 10/14 壬申이 좋습니다. 9/9 묘유충, 9/30 자오충은 피합니다.\n" +
+      "사주는 참고로 보고, 결정은 민선 님이 한다고 늘 덧붙입니다.\n" +
+      MINSEON_CTX + AI_RULES
+  };
+
+  function loadAiCfg(){
+    try{
+      var raw = localStorage.getItem(AI_STORE);
+      if(!raw) return;
+      var o = JSON.parse(raw);
+      if(o && typeof o === "object"){
+        aiCfg.key = (typeof o.key === "string") ? o.key.trim() : "";
+        aiCfg.enabled = (o.enabled === false) ? false : true;
+      }
+    }catch(e){ aiCfg.key = ""; aiCfg.enabled = true; }
+  }
+
+  function saveAiCfg(){
+    try{
+      if(aiCfg.key || aiCfg.enabled === false){
+        localStorage.setItem(AI_STORE, JSON.stringify({key:aiCfg.key, enabled:aiCfg.enabled, savedAt:Date.now()}));
+      }else{
+        localStorage.removeItem(AI_STORE);
+      }
+      return true;
+    }catch(e){ return false; }
+  }
+
+  function aiReady(){ return !!(aiCfg.enabled && aiCfg.key); }
+
+  function paintAiBadge(){
+    var btn = document.getElementById("aiBtn");
+    var txt = document.getElementById("aiBtnText");
+    if(!btn) return;
+    var on = aiReady();
+    btn.classList.toggle("on", on);
+    if(txt) txt.textContent = on ? "AI 연결됨" : "AI 연결";
+    btn.setAttribute("aria-label", on ? "AI 연결 설정 — Gemini 연결됨" : "AI 연결 설정");
+  }
+
+  function paintAiStatus(){
+    var box = document.getElementById("aiStatus");
+    var txt = document.getElementById("aiStatusText");
+    var sw = document.getElementById("aiSwitch");
+    if(sw) sw.setAttribute("aria-checked", aiCfg.enabled ? "true" : "false");
+    if(!box || !txt) return;
+    var on = aiReady();
+    box.classList.toggle("on", on);
+    if(on) txt.textContent = "Gemini 연결됨 · 다섯 비서가 실제 AI로 답해요";
+    else if(aiCfg.key && !aiCfg.enabled) txt.textContent = "키는 저장됨 · 연결 꺼짐(기본 모드)";
+    else txt.textContent = "아직 연결되지 않았어요 · 기본 모드";
+  }
+
+  function openAiModal(){
+    var m = document.getElementById("aiModal");
+    var input = document.getElementById("geminiKey");
+    if(!m) return;
+    if(input) input.value = aiCfg.key || "";
+    paintAiStatus();
+    m.hidden = false;
+    document.body.style.overflow = "hidden";
+    setTimeout(function(){ if(input) input.focus(); }, 60);
+  }
+
+  function closeAiModal(){
+    var m = document.getElementById("aiModal");
+    if(!m) return;
+    m.hidden = true;
+    document.body.style.overflow = "";
+    var input = document.getElementById("geminiKey");
+    if(input) input.type = "password";
+    var eye = document.getElementById("eyeBtn");
+    if(eye){ eye.setAttribute("aria-pressed", "false"); eye.setAttribute("aria-label", "키 보기"); }
+  }
+
+  function bindAiUi(){
+    var btn = document.getElementById("aiBtn");
+    if(btn) btn.addEventListener("click", openAiModal);
+    var close = document.getElementById("aiClose");
+    if(close) close.addEventListener("click", closeAiModal);
+    var back = document.getElementById("aiBack");
+    if(back) back.addEventListener("click", closeAiModal);
+    document.addEventListener("keydown", function(e){
+      var m = document.getElementById("aiModal");
+      if(e.key === "Escape" && m && !m.hidden) closeAiModal();
+    });
+
+    var eye = document.getElementById("eyeBtn");
+    var input = document.getElementById("geminiKey");
+    if(eye && input){
+      eye.addEventListener("click", function(){
+        var show = input.type === "password";
+        input.type = show ? "text" : "password";
+        eye.setAttribute("aria-pressed", show ? "true" : "false");
+        eye.setAttribute("aria-label", show ? "키 가리기" : "키 보기");
+        eye.textContent = show ? "🙈" : "👁";
+      });
+    }
+
+    var sw = document.getElementById("aiSwitch");
+    if(sw) sw.addEventListener("click", function(){
+      aiCfg.enabled = !aiCfg.enabled;
+      saveAiCfg();
+      paintAiStatus();
+      paintAiBadge();
+      toast(aiCfg.enabled ? "Gemini 연결을 켰어요" : "Gemini 연결을 껐어요 (기본 모드)");
+    });
+
+    var save = document.getElementById("aiSave");
+    if(save) save.addEventListener("click", function(){
+      var v = input ? input.value.trim() : "";
+      if(!v){
+        if(input) input.focus();
+        toast("Gemini API 키를 먼저 넣어 주세요");
+        return;
+      }
+      if(v.length < 20){
+        if(input) input.focus();
+        toast("키가 너무 짧아요. AI Studio에서 받은 키를 그대로 붙여넣어 주세요");
+        return;
+      }
+      aiCfg.key = v;
+      aiCfg.enabled = true;
+      var ok = saveAiCfg();
+      paintAiStatus();
+      paintAiBadge();
+      if(ok) toast("Gemini 키를 이 브라우저에만 저장했어요 ⚙️");
+      else toast("저장이 막혔어요. 브라우저 저장 공간을 확인해 주세요");
+    });
+
+    var clr = document.getElementById("aiClear");
+    if(clr) clr.addEventListener("click", function(){
+      if(!aiCfg.key){ toast("저장된 키가 없어요"); return; }
+      if(!window.confirm("저장한 Gemini API 키를 이 브라우저에서 지울까요?")) return;
+      aiCfg.key = "";
+      aiCfg.enabled = true;
+      saveAiCfg();
+      if(input) input.value = "";
+      paintAiStatus();
+      paintAiBadge();
+      toast("키를 지웠어요. 이제 기본 모드로 동작합니다");
+    });
+  }
+
+  /* ── Gemini 호출 ─────────────────────────── */
+  function recentContext(room, limit){
+    var list = (state.rooms[room] || []).slice(-limit);
+    return list.map(function(m){
+      var p = PEOPLE[m.who] || PEOPLE.mong;
+      return p.name + ": " + String(m.text || "").replace(/\s+/g, " ").slice(0, 220);
+    }).join("\n");
+  }
+
+  function todayKor(){
+    var d = new Date();
+    var w = ["일","월","화","수","목","금","토"][d.getDay()];
+    return d.getFullYear() + "년 " + (d.getMonth()+1) + "월 " + d.getDate() + "일 (" + w + ")";
+  }
+
+  function geminiBody(who, text, room){
+    var ctx = recentContext(room, 8);
+    var sys = AI_SYSTEM[who] || AI_SYSTEM.mong;
+    var p = PEOPLE[who] || PEOPLE.mong;
+    var userText =
+      "오늘은 " + todayKor() + "입니다.\n" +
+      (ctx ? "최근 회의실 대화(참고용):\n" + ctx + "\n\n" : "") +
+      "민선 님이 방금 하신 말씀: " + text + "\n\n" +
+      p.name + "으로서 이 말씀에 지금 바로 답해 주세요. 인사말은 짧게, 내용은 구체적으로.";
+    return {
+      system_instruction:{parts:[{text:sys}]},
+      contents:[{role:"user", parts:[{text:userText}]}],
+      generationConfig:{temperature:0.95, topP:0.95, maxOutputTokens:600}
+    };
+  }
+
+  function geminiText(j){
+    try{
+      var c = j && j.candidates && j.candidates[0];
+      var parts = (c && c.content && c.content.parts) || [];
+      var out = parts.map(function(p){ return (p && p.text) ? p.text : ""; }).join("").trim();
+      return out;
+    }catch(e){ return ""; }
+  }
+
+  function callGemini(who, text, room){
+    var body = geminiBody(who, text, room);
+    var i = 0;
+
+    function attempt(){
+      var model = GEMINI_MODELS[i];
+      var url = "https://generativelanguage.googleapis.com/v1beta/models/" + model +
+                ":generateContent?key=" + encodeURIComponent(aiCfg.key);
+      var ctrl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+      var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, 30000) : null;
+
+      return fetch(url, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(body),
+        signal: ctrl ? ctrl.signal : undefined
+      }).then(function(res){
+        if(timer) clearTimeout(timer);
+        return res.json().catch(function(){ return {}; }).then(function(j){
+          if(res.ok){
+            var t = geminiText(j);
+            if(t) return t;
+            var e = new Error("빈 응답"); e.status = 0; e.msg = "빈 응답"; throw e;
+          }
+          var err = new Error("HTTP " + res.status);
+          err.status = res.status;
+          err.msg = (j && j.error && j.error.message) ? j.error.message : ("HTTP " + res.status);
+          throw err;
+        });
+      }).catch(function(err){
+        if(timer) clearTimeout(timer);
+        err = err || new Error("network");
+        var m = String(err.msg || err.message || "");
+        var modelGone = (err.status === 404) || /not found|not supported|unsupported|no longer available/i.test(m);
+        if(modelGone && (i + 1) < GEMINI_MODELS.length){
+          i++;
+          return attempt();
+        }
+        throw err;
+      });
+    }
+    return attempt();
+  }
+
+  function aiErrorNote(err){
+    if(!err) return "Gemini 연결에 실패했어요";
+    var s = err.status || 0;
+    var m = String(err.msg || err.message || "").toLowerCase();
+    if(err.name === "AbortError") return "Gemini 응답이 너무 늦었어요";
+    if(s === 400 && /api key|api_key|key not valid|invalid/i.test(m)) return "API 키가 올바르지 않은 것 같아요";
+    if(s === 403) return "이 키로는 Gemini를 쓸 수 없어요 (권한·국가 제한)";
+    if(s === 429) return "오늘 무료 한도(분당·일일)를 넘었어요. 조금 뒤 다시 시도해 주세요";
+    if(s === 404) return "Gemini 모델을 찾지 못했어요";
+    if(s >= 500) return "Gemini 서버가 잠시 불안정해요";
+    if(/failed to fetch|network|load failed|err_failed/i.test(m)) return "네트워크 또는 키 제한으로 호출이 막혔어요";
+    return "Gemini 호출에 문제가 있었어요";
+  }
+
+  function cleanReply(t){
+    var s = String(t || "").trim();
+    s = s.replace(/^```[a-zA-Z]*\n?/, "").replace(/\n?```$/, "");
+    s = s.replace(/\*\*/g, "").replace(/^#{1,6}\s*/gm, "");
+    s = s.replace(/\n{3,}/g, "\n\n");
+    return s.slice(0, 900);
+  }
+
+  function respondWithAI(text, targets, room){
+    var warned = false;
+    targets.forEach(function(who){ typingSet[who] = true; });
+    var panel = document.getElementById("panel-meeting");
+    if(panel && panel.classList.contains("active")) renderRoom();
+
+    targets.forEach(function(who){
+      callGemini(who, text, room).then(function(reply){
+        var body = cleanReply(reply);
+        delete typingSet[who];
+        if(!body){
+          throw {status:0, msg:"빈 응답"};
+        }
+        pushMessage(room, {who:who, text:body, time:nowTime()});
+      }).catch(function(err){
+        delete typingSet[who];
+        if(!warned){
+          warned = true;
+          toast(aiErrorNote(err) + " — 기본 답변으로 대신했어요");
+        }
+        pushMessage(room, {who:who, text:buildReply(who, text), time:nowTime()});
+      });
+    });
+  }
+
   /* ── 회의실 ─────────────────────────────── */
   var chatScroll, chatInput;
 
@@ -972,6 +1438,7 @@
     chatScroll.textContent = "";
     var list = state.rooms[room] || [];
     list.forEach(function(m){ chatScroll.appendChild(messageNode(m)); });
+    Object.keys(typingSet).forEach(function(who){ chatScroll.appendChild(typingNode(who)); });
     chatScroll.scrollTop = chatScroll.scrollHeight;
   }
 
@@ -1011,7 +1478,9 @@
     if(state.room === room) renderRoom();
   }
 
-  function showTyping(who){
+  var typingSet = {};
+
+  function typingNode(who){
     var p = PEOPLE[who] || PEOPLE.mong;
     var wrap = el("div", "msg typing");
     wrap.setAttribute("aria-label", p.name + " 답변 중");
@@ -1030,8 +1499,14 @@
     body.appendChild(bubble);
     wrap.appendChild(av);
     wrap.appendChild(body);
-    chatScroll.appendChild(wrap);
-    chatScroll.scrollTop = chatScroll.scrollHeight;
+    return wrap;
+  }
+
+  function setTyping(who, on){
+    if(on) typingSet[who] = true;
+    else delete typingSet[who];
+    var panel = document.getElementById("panel-meeting");
+    if(panel && panel.classList.contains("active")) renderRoom();
   }
 
   function hasAny(text, words){
@@ -1275,11 +1750,12 @@
     return out.length ? out : ["mong"];
   }
 
-  function respond(userText, targets, room){
+  function respondLocal(userText, targets, room){
     targets.forEach(function(who, idx){
       setTimeout(function(){
-        if(state.room === room) showTyping(who);
+        if(state.room === room) setTyping(who, true);
         setTimeout(function(){
+          setTyping(who, false);
           pushMessage(room, {who:who, text:buildReply(who, userText), time:nowTime()});
         }, 520);
       }, 320 + idx * 620);
@@ -1294,7 +1770,8 @@
     chatInput.value = "";
     chatInput.style.height = "auto";
     var targets = parseMentions(text);
-    respond(text, targets, room);
+    if(aiReady()) respondWithAI(text, targets, room);
+    else respondLocal(text, targets, room);
     saveState();
   }
 
@@ -1722,6 +2199,9 @@
     $("#headDate").textContent = todayLabel();
 
     loadState();
+    loadAiCfg();
+    paintAiBadge();
+    bindAiUi();
 
     Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(b){
       b.addEventListener("click", function(){ switchTab(b.getAttribute("data-tab")); });
