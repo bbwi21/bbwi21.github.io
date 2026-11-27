@@ -106,6 +106,10 @@
     70%{box-shadow:0 0 0 7px rgba(76,191,143,0)}
     100%{box-shadow:0 0 0 0 rgba(76,191,143,0)}
   }
+  .live.warn{color:#a86b1e;background:#fff7e8;border-color:#ffe2b8}
+  .live.warn .dot{background:#e0b25a;animation:none;box-shadow:none}
+  .live.off{color:#8f6b7e;background:#f8f3f6;border-color:#eee3ea}
+  .live.off .dot{background:#bca9b4;animation:none;box-shadow:none}
 
   /* ── 메인 탭 ────────────────────────── */
   .tabs{
@@ -513,7 +517,7 @@
           </p>
         </div>
       </div>
-      <div class="live"><span class="dot" aria-hidden="true"></span>실시간 연결</div>
+      <div class="live warn" id="syncBadge" title="실시간 DB 연결 상태"><span class="dot" aria-hidden="true"></span><span id="syncText">연결 중…</span></div>
     </header>
 
     <nav class="tabs" role="tablist" aria-label="비서실 메뉴">
@@ -630,10 +634,13 @@
       <p class="foot" id="memoCount">메모 0개</p>
     </section>
   </div>
-  <p class="foot">민선 님만의 작은 비서실 · 입력한 내용은 이 브라우저에만 저장되고 밖으로 나가지 않아요</p>
+  <p class="foot">민선 님만의 작은 비서실 · 입력한 내용은 실시간 DB에 저장되어 모든 기기에서 함께 보여요</p>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- Firebase 실시간 DB (compat SDK) -->
+<script src="https://www.gstatic.com/firebasejs/13.4.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/13.4.0/firebase-database-compat.js"></script>
 <script>
 (function(){
   "use strict";
@@ -748,6 +755,159 @@
     }
   }
 
+  /* ── 실시간 DB (Firebase Realtime Database) ── */
+  var DB_ROOT = "minseon_office";
+  var FIREBASE_CFG = {
+    apiKey: "AIzaSyA80mqqDIrDLa2cF5naWnkbuC_kv3xFVTc",
+    authDomain: "minseon-secretariat.firebaseapp.com",
+    databaseURL: "https://minseon-secretariat-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "minseon-secretariat",
+    storageBucket: "minseon-secretariat.firebasestorage.app",
+    messagingSenderId: "441487658450",
+    appId: "1:441487658450:web:d116c0f2819025f2edcc0b"
+  };
+
+  var fdb = null;        // firebase.database() 인스턴스
+  var dbLive = false;    // 서버와 실제 연결됨
+  var dataReady = false; // 최초 시드 확인 + 리스너 부착 완료
+  var syncBadge = null, syncText = null;
+
+  function setSync(stateKind, text){
+    if(!syncBadge) return;
+    syncBadge.classList.toggle("warn", stateKind === "warn");
+    syncBadge.classList.toggle("off", stateKind === "off");
+    if(syncText) syncText.textContent = text;
+  }
+
+  function newId(prefix){
+    return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function dbPut(path, val){
+    if(!fdb) return;
+    try{ fdb.ref(DB_ROOT + "/" + path).set(val); }catch(e){}
+  }
+  function dbPatch(path, val){
+    if(!fdb) return;
+    try{ fdb.ref(DB_ROOT + "/" + path).update(val); }catch(e){}
+  }
+  function dbDel(path){
+    if(!fdb) return;
+    try{ fdb.ref(DB_ROOT + "/" + path).remove(); }catch(e){}
+  }
+
+  function seedPayload(){
+    var out = {rooms:{}, tasks:{}, memos:{}};
+    Object.keys(SEED_ROOMS).forEach(function(room){
+      var bag = {};
+      SEED_ROOMS[room].forEach(function(m, i){
+        bag["s" + (i + 1)] = {who:m.who, text:m.text, time:m.time, ts:i + 1};
+      });
+      out.rooms[room] = bag;
+    });
+    SEED_TASKS.forEach(function(t, i){
+      out.tasks[t.id] = {title:t.title, meta:t.meta, cat:t.cat, who:t.who,
+                         due:t.due || "", done:!!t.done, ord:(SEED_TASKS.length - i) * 1000};
+    });
+    SEED_MEMOS.forEach(function(m, i){
+      out.memos[m.id] = {text:m.text, done:!!m.done, ord:(SEED_MEMOS.length - i) * 1000};
+    });
+    return out;
+  }
+
+  function msgArray(bag){
+    var list = [];
+    if(!bag || typeof bag !== "object") return list;
+    Object.keys(bag).forEach(function(k){
+      var m = bag[k];
+      if(!m || typeof m !== "object") return;
+      list.push({id:k, who:m.who || "mong", text:m.text || "",
+                 time:m.time || "", ts:(typeof m.ts === "number" ? m.ts : 0)});
+    });
+    list.sort(function(a, b){ return (a.ts - b.ts) || (a.id < b.id ? -1 : 1); });
+    return list;
+  }
+
+  function itemArray(bag){
+    var list = [];
+    if(!bag || typeof bag !== "object") return list;
+    Object.keys(bag).forEach(function(k){
+      var t = bag[k];
+      if(!t || typeof t !== "object") return;
+      list.push({id:k, title:t.title || "", text:t.text || "", meta:t.meta || "",
+                 cat:t.cat || "exp", who:t.who || "mong", due:t.due || null,
+                 done:!!t.done, ord:(typeof t.ord === "number" ? t.ord : 0)});
+    });
+    list.sort(function(a, b){ return (b.ord - a.ord) || (a.id < b.id ? -1 : 1); });
+    return list;
+  }
+
+  function applyRooms(snap){
+    var val = snap.val();
+    if(!val) return;
+    var rooms = {};
+    Object.keys(ROOM_INFO).forEach(function(r){ rooms[r] = msgArray(val[r]); });
+    state.rooms = rooms;
+    saveState();
+    if(chatScroll && document.getElementById("panel-meeting").classList.contains("active")) renderRoom();
+  }
+
+  function applyTasks(snap){
+    var val = snap.val();
+    state.tasks = val ? itemArray(val) : [];
+    saveState();
+    renderTasks();
+    renderTeam();
+  }
+
+  function applyMemos(snap){
+    var val = snap.val();
+    state.memos = val ? itemArray(val) : [];
+    saveState();
+    renderMemos();
+  }
+
+  function attachDb(){
+    var root = fdb.ref(DB_ROOT);
+
+    fdb.ref(".info/connected").on("value", function(s){
+      dbLive = !!s.val();
+      if(!dbLive) setSync("warn", "재연결 중…");
+      else if(dataReady) setSync(true, "실시간 DB 연결");
+      else setSync("warn", "연결 확인 중…");
+    });
+
+    root.once("value").then(function(snap){
+      if(snap.exists()) return null;
+      return root.set(seedPayload());   // 비어 있을 때만 초기 데이터 1회 저장
+    }).then(function(){
+      root.child("rooms").on("value", applyRooms);
+      root.child("tasks").on("value", applyTasks);
+      root.child("memos").on("value", applyMemos);
+      dataReady = true;
+      if(dbLive) setSync(true, "실시간 DB 연결");
+    }).catch(function(){
+      setSync("off", "로컬 저장 모드");
+    });
+  }
+
+  function initDb(){
+    syncBadge = document.getElementById("syncBadge");
+    syncText = document.getElementById("syncText");
+    try{
+      if(typeof firebase === "undefined" || !firebase.initializeApp){
+        setSync("off", "로컬 저장 모드");
+        return;
+      }
+      if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CFG);
+      fdb = firebase.database();
+      attachDb();
+    }catch(e){
+      fdb = null;
+      setSync("off", "로컬 저장 모드");
+    }
+  }
+
   /* ── 공통 유틸 ──────────────────────────── */
   function $(sel){ return document.querySelector(sel); }
   function el(tag, cls, text){
@@ -829,8 +989,12 @@
 
   function pushMessage(room, msg){
     if(!state.rooms[room]) state.rooms[room] = [];
+    if(!msg.id) msg.id = newId("g");
+    if(typeof msg.ts !== "number") msg.ts = Date.now();
+    if(!msg.time) msg.time = nowTime();
     state.rooms[room].push(msg);
     saveState();
+    dbPut("rooms/" + room + "/" + msg.id, {who:msg.who, text:msg.text, time:msg.time, ts:msg.ts});
     if(state.room === room) renderRoom();
   }
 
@@ -1050,6 +1214,7 @@
     check.addEventListener("click", function(){
       t.done = !t.done;
       saveState();
+      dbPatch("tasks/" + t.id, {done:t.done});
       renderTasks();
       renderTeam();
       toast(t.done ? "완료로 표시했어요 ✓" : "다시 진행 중으로 돌렸어요");
@@ -1072,6 +1237,7 @@
       if(!window.confirm("이 작업을 삭제할까요?\n\n" + t.title)) return;
       state.tasks = state.tasks.filter(function(x){ return x.id !== t.id; });
       saveState();
+      dbDel("tasks/" + t.id);
       renderTasks();
       renderTeam();
       toast("작업을 삭제했어요");
@@ -1093,15 +1259,21 @@
     }
     var cat = $("#newCat").value;
     var due = $("#newDue").value || null;
-    state.tasks.unshift({
-      id:"t" + Date.now(),
+    var ord = Date.now();
+    state.tasks.forEach(function(x){ if(x.ord && x.ord >= ord) ord = x.ord + 1; });
+    var task = {
+      id:newId("t"),
       title:title,
       meta: due ? "마감 " + due.slice(5).replace("-", "/") : "일정 미정",
       cat:cat,
       who:(CAT_INFO[cat] || CAT_INFO.exp).who,
       due:due,
-      done:false
-    });
+      done:false,
+      ord:ord
+    };
+    state.tasks.unshift(task);
+    dbPut("tasks/" + task.id, {title:task.title, meta:task.meta, cat:task.cat,
+                               who:task.who, due:task.due || "", done:false, ord:task.ord});
     titleEl.value = "";
     $("#newDue").value = "";
     state.filter = "all";
@@ -1187,6 +1359,7 @@
       check.addEventListener("click", function(){
         m.done = !m.done;
         saveState();
+        dbPatch("memos/" + m.id, {done:m.done});
         renderMemos();
       });
       var text = el("div", "mt");
@@ -1197,8 +1370,9 @@
       del.style.position = "static";
       del.addEventListener("click", function(){
         if(!window.confirm("이 메모를 삭제할까요?\n\n" + m.text)) return;
-        state.memos = state.memos.filter(function(x){ return x !== m; });
+        state.memos = state.memos.filter(function(x){ return x.id !== m.id; });
         saveState();
+        dbDel("memos/" + m.id);
         renderMemos();
         toast("메모를 삭제했어요");
       });
@@ -1215,7 +1389,11 @@
     var input = $("#memoInput");
     var text = input.value.trim();
     if(!text){ input.focus(); return; }
-    state.memos.unshift({id:"m" + Date.now(), text:text, done:false});
+    var ord = Date.now();
+    state.memos.forEach(function(x){ if(x.ord && x.ord >= ord) ord = x.ord + 1; });
+    var memo = {id:newId("m"), text:text, done:false, ord:ord};
+    state.memos.unshift(memo);
+    dbPut("memos/" + memo.id, {text:memo.text, done:false, ord:memo.ord});
     input.value = "";
     saveState();
     renderMemos();
@@ -1401,7 +1579,7 @@
     if(name === "team") renderTeam();
     if(name === "memo") renderMemos();
     if(name === "meeting"){
-      chatScroll.scrollTop = chatScroll.scrollHeight;
+      renderRoom();
     }
     if(name === "office"){ startOffice(); } else { stopOffice(); }
   }
@@ -1482,6 +1660,7 @@
     renderTeam();
     renderMemos();
     switchTab("office");
+    initDb();
 
     document.addEventListener("visibilitychange", function(){
       if(document.hidden){ stopOffice(); }
