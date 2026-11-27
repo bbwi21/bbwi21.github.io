@@ -1322,6 +1322,11 @@
       var ok = saveAiCfg();
       paintAiStatus();
       paintAiBadge();
+      var out = document.getElementById("aiTestOut");
+      if(out && out.className.indexOf("ok") !== -1){
+        out.className = "ai-test-out ok";
+        out.textContent = "저장 완료 — 이 키로 비서들이 실제 AI로 답합니다.";
+      }
       if(ok) toast("Gemini 키를 이 브라우저에만 저장했어요 ⚙️");
       else toast("저장이 막혔어요. 브라우저 저장 공간을 확인해 주세요");
     });
