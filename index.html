@@ -169,6 +169,7 @@
   .av-sunny{background:linear-gradient(160deg,#fff1d8,#ffe1b3);color:#b57b32}
   .av-han{background:linear-gradient(160deg,#e4efff,#d3e4ff);color:#5b78b5}
   .av-daon{background:linear-gradient(160deg,#e4f7ea,#d2f0dd);color:#4f8f68}
+  .av-byul{background:linear-gradient(160deg,#f1ecff,#e2d7ff);color:#7a63c0}
   .av-me{background:linear-gradient(160deg,#ffe6f1,#ffd0e5)}
   .msg .body{display:flex;flex-direction:column;align-items:flex-start;min-width:0;max-width:86%}
   .who{display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap}
@@ -474,6 +475,7 @@
   @media(min-width:760px){
     .task-list,.memo-list{grid-template-columns:1fr 1fr}
     .team-grid{grid-template-columns:1fr 1fr}
+    .team-grid .member:last-child:nth-child(odd){grid-column:1/-1}
   }
   @media(max-width:560px){
     .stage{padding:10px 8px 24px}
@@ -540,7 +542,7 @@
       <div class="office-head">
         <div>
           <h2 class="office-title"><span class="ot-ic" aria-hidden="true">🗺️</span>오피스 맵</h2>
-          <p class="office-sub">대회의실 · 지휘실 · 라운지, 세 공간에서 네 명의 비서가 움직입니다.</p>
+          <p class="office-sub">대회의실 · 지휘실 · 라운지, 세 공간에서 다섯 명의 비서가 움직입니다.</p>
         </div>
         <button class="office-cta" id="officeCta" type="button">💬 지휘실에서 지시하기</button>
       </div>
@@ -572,7 +574,7 @@
           <button class="subtab" data-room="command" aria-pressed="false">🎯 지휘실</button>
           <button class="subtab" data-room="lounge" aria-pressed="false">☕ 라운지</button>
         </div>
-        <div class="room-meta" id="roomMeta">🏛️ 대회의실 · ON 5명</div>
+        <div class="room-meta" id="roomMeta">🏛️ 대회의실 · ON 6명</div>
       </div>
 
       <div class="chat-wrap">
@@ -584,6 +586,7 @@
             <button class="chip" data-mention="@써니비서">@써니비서</button>
             <button class="chip" data-mention="@한결비서">@한결비서</button>
             <button class="chip" data-mention="@다온비서">@다온비서</button>
+            <button class="chip" data-mention="@별하비서">@별하비서</button>
           </div>
           <div class="input-row">
             <textarea id="chatInput" rows="1" placeholder="민선 님, 시키실 일을 적어주세요. (예: @써니비서 내일 43번지 준비물 챙겨줘)" aria-label="지시 입력"></textarea>
@@ -626,7 +629,7 @@
 
     <!-- 비서현황 -->
     <section class="panel" id="panel-team" role="tabpanel" aria-label="비서현황">
-      <h2 class="sec-title">👥 우리 비서실 4인</h2>
+      <h2 class="sec-title">👥 우리 비서실 5인</h2>
       <div class="team-grid" id="teamGrid"></div>
     </section>
 
@@ -658,6 +661,7 @@
     sunny: {name:"써니 비서",  role:"체험단·블로그 비서", emoji:"✍️", av:"av-sunny"},
     han:   {name:"한결 비서",  role:"재무·자금 비서",    emoji:"💼", av:"av-han"},
     daon:  {name:"다온 비서",  role:"청약·생활 케어 비서", emoji:"🏠", av:"av-daon"},
+    byul:  {name:"별하 비서",  role:"사주·명리 비서",     emoji:"🔮", av:"av-byul"},
     me:    {name:"민선 님",    role:"비서실 주인",       emoji:"👑", av:"av-me"}
   };
 
@@ -673,6 +677,7 @@
       {who:"sunny", time:"오후 5:33", text:"내일(11/28) 저녁 8시 43번지혼술바 을지로점 방문 체크리스트 내일 오전 9시에 올리겠습니다! 신사 진미골 신청도 완료했어요. 사진 15장 이상, 짧은 영상, 15초 세로 클립까지 챙길게요 ✍️"},
       {who:"han",   time:"오후 5:35", text:"11/30 월말 세무 마감과 한은 금통위 3.25% 반영 자금 체크 중입니다. 원천세·법인세 중간예납 일정은 표로 정리해 다음 주 월요일 브리핑에 올리겠습니다 💼"},
       {who:"daon",  time:"오후 5:36", text:"투룸 이상 청약 오늘 0건 확인했고, 12/8 달러박스 알림도 대기 중입니다. 히로시마는 1/28 자동결제와 1/30 무료취소 기한만 남았어요 🏠"},
+      {who:"byul",  time:"오후 5:37", text:"2028년 택일 표 마저 정리해 두었어요. 1순위는 9/23(토) 辛亥日, 2순위 9/16 甲辰, 3순위 9/17 乙巳 손 없는 날입니다. 웨딩홀 확인하실 때 같이 봐 드릴게요 🔮"},
       {who:"me",    time:"오후 5:41", text:"고마워요 다들, 내일 43번지 준비 잘 부탁해요!"},
       {who:"sunny", time:"오후 5:42", text:"네, 민선 님! 내일 오전 9시 체크리스트로 딱 맞춰 뵙겠습니다 ☺️"}
     ],
@@ -681,6 +686,7 @@
       {who:"sunny", time:"오후 5:13", text:"네, 민선 님! 4개 구·12/20 이후 기준으로 다시 대조해서, 조건 밖 대기 건은 발표 전에 선정 전 취소로 정리하겠습니다. 43번지혼술바는 내일 20:00 2인 방문으로 체크리스트 9시에 올려요 ✍️"},
       {who:"han",   time:"오후 5:14", text:"네, 민선 님! 11/30 월말 세무 마감과 한은 금통위 3.25% 반영 자금 체크 중입니다. 자금일보는 퇴근 전에 한 번 더 맞춰 두겠습니다 💼"},
       {who:"daon",  time:"오후 5:15", text:"네, 민선 님! 투룸 이상 청약 오늘 0건 확인했고, 12/8 달러박스 알림도 대기 중입니다. 하트스캔 추적(유방 초음파·B형간염 접종)도 잊지 않고 챙길게요 🏠"},
+      {who:"byul",  time:"오후 5:15", text:"네, 민선 님! 2028-09-23 辛亥日이 해묘미 삼합으로 가장 깨끗합니다. 10월까지 넓히면 10/14 壬申도 좋아요 🔮"},
       {who:"mong",  time:"오후 5:16", text:"네 분 보고 모두 받았습니다. 정리 끝나는 대로 제가 한 번에 묶어서 보고드릴게요. 민선 님 퇴근길 편히 쉬세요! 필요한 일은 여기 태그해서 바로 시켜주세요 🌸"}
     ],
     lounge:[
@@ -957,7 +963,7 @@
 
   function renderRoom(){
     var room = state.room;
-    $("#roomMeta").textContent = ROOM_INFO[room].icon + " " + ROOM_INFO[room].name + " · ON 5명";
+    $("#roomMeta").textContent = ROOM_INFO[room].icon + " " + ROOM_INFO[room].name + " · ON 6명";
     Array.prototype.forEach.call(document.querySelectorAll(".subtab"), function(b){
       var on = b.getAttribute("data-room") === room;
       b.classList.toggle("active", on);
@@ -1117,6 +1123,41 @@
         "결혼 준비는 급하지 않게, 하나씩 확인해서 여쭙겠습니다. 택일 1순위 웨딩홀부터 볼까요?"
       ]}
     ],
+    byul:[
+      {k:["얘들아","얘들아!","안녕","하이","헬로","hello","hi","뭐해","뭐 하고","뭐하세요","있어?","계세요","불렀","호출","다들","모두","전부","모여","집합","수고"], r:[
+        "별하예요, 부르셨어요? 만세력 펴 두고 있었어요 🔮",
+        "네, 민선 님! 오늘 일진 보다가 왔습니다. 무엇이 궁금하세요?",
+        "불러 주셔서 고마워요. 원국 흐름은 늘 펴 두고 있습니다 🌙",
+        "별하 여기 있어요~ 2028년 택일 표 마저 정리하던 중이었어요 ✨",
+        "네! 병자년 무술월생 원국이랑 오늘 일진 맞춰 보던 중이었습니다."
+      ]},
+      {k:["사주","만세력","원국","명리","일주","오행"], r:[
+        "민선 님 원국은 丙子년 戊戌월 丁未일 丙午시, 정화 일간에 식상이 발달한 명식이에요. 표현하고 만들어 내는 힘이 좋아서 일도 글도 잘 풀리는 구조입니다 🔮",
+        "丁未일주에 午시가 같이 있어서 속이 뜨거운 편이에요. 감정은 빨리 데우고 빨리 식히는 대신, 결정은 하루 묵혀 두면 훨씬 편해집니다.",
+        "戊戌월은 토가 두터운 달이라 겉은 차분한데 속으론 계산이 많은 구조예요. 그래서 손에 익은 일에서 힘이 나는 분입니다.",
+        "식상이 발달한 명식은 말과 글로 풀어야 기운이 풀립니다. 답답할수록 짧게라도 적어 두시는 게 좋아요."
+      ]},
+      {k:["운세","올해","내년","2027","2028","대운","신년","기운"], r:[
+        "2027 정미년은 남자친구분 창업에 힘이 실리는 해예요. 2028 무신년 신유월은 상관생재에 정재가 만개하는 결혼 최적기로 봤습니다 🌙",
+        "2026 병오년 자오충은 자리 이동이 컸던 해로 읽었어요. 올해는 정리하고 내년에 새 판 까는 흐름으로 보시면 좋습니다.",
+        "2029 기유년은 묘유충이 걸려서 결혼 시기로는 피하시는 게 좋다고 봤어요."
+      ]},
+      {k:["궁합","남자친구","신랑","배우자"], r:[
+        "두 분 다 정화 일간에 신랑은 정묘일주, 민선 님은 정미일주라 묘미반합이 됩니다. 같은 불이라 온도가 비슷하고 지지가 붙어서 생활 리듬도 잘 맞는 편이에요 🔮",
+        "신랑분은 정묘일주 무신시로 상관생재 구조예요. 말로 벌고 만들어 버는 힘이 있어서 카페 같은 사업이랑 잘 맞습니다.",
+        "궁합은 참고용이에요. 같은 불끼리라 서로 뜨거워질 때가 있으니, 한 발 쉬는 규칙 하나만 정해 두면 오래 편안합니다."
+      ]},
+      {k:["택일","결혼날","예식","길일","손없는","웨딩홀"], r:[
+        "1순위는 2028-09-23(토) 辛亥日이에요. 신랑 卯·민선 님 未·예식일 亥가 해묘미 삼합으로 완전히 맞고, 두 분 모두 천을귀인이 깃든 날입니다 🔮",
+        "2순위는 9/16 甲辰, 3순위는 9/17 乙巳 손 없는 날이에요. 10월로 넘기면 10/14 壬申이 신부 정임합으로 좋습니다.",
+        "9/9는 묘유충, 9/30은 자오충에 추석 귀향까지 겹쳐서 피하시는 게 좋아요. 웨딩홀 최종 선택은 민선 님이 하시면 됩니다."
+      ]},
+      {k:["오늘","일진","조언","고민","힘들","답답"], r:[
+        "오늘은 결정보다 정리하기 좋은 날이에요. 밀려 둔 서류 하나만 처리해도 기운이 확 플립니다 🌙",
+        "속이 답답할 때는 크게 바꾸기보다 잠깐 멈추는 쪽이 나아요. 민선 님 원국은 쉬어야 다음 판이 잘 열립니다.",
+        "하는 일마다 챙기는 편이라 기운을 나눠 쓰기 쉬워요. 오늘은 한 가지에만 집중해 보세요."
+      ]}
+    ],
     mong:[
       {k:["얘들아","얘들아!","안녕","하이","헬로","hello","hi","뭐해","뭐 하고","뭐하세요","있어?","계세요","불렀","호출","다들","모두","전부","모여","집합","수고"], r:[
         "네, 민선 님! 몽이 여기 있어요. 셋 다 불러 놨어요, 잠깐만 기다려 주세요 🌸",
@@ -1172,6 +1213,13 @@
       "투룸 이상만 보고, 보증금·월세·관리비까지 한 줄로 정리해 올릴게요 🏠",
       "건강검진 추적은 미루지 않게 미리 알림 걸어 두겠습니다.",
       "히로시마 남은 일정 표로 정리해서 보내 드릴게요 ☺️"
+    ],
+    byul: [
+      "사주 쪽은 제가 조용히 펴 두고 볼게요. 궁금한 것만 하나씩 여쭤 주세요 🔮",
+      "네, 민선 님! 원국 흐름이랑 내년 기운 함께 놓고 정리해 드릴게요.",
+      "만세력으로 날짜 잡아 드릴게요. 후보를 몇 개 짚어 주시면 비교해서 올립니다.",
+      "오늘은 흐름만 짚어 드리고, 결정은 민선 님이 하시는 걸로 해요 🌙",
+      "필요하실 때마다 불러 주세요. 미리 표로 정리해 두겠습니다."
     ]
   };
 
@@ -1207,18 +1255,22 @@
   }
 
   function parseMentions(text){
-    var order = ["mong","sunny","han","daon"];
+    var order = ["mong","sunny","han","daon","byul"];
     var lower = String(text || "").toLowerCase();
     if(lower.indexOf("@all") !== -1) return order.slice();
     var callAll = ["얘들아","얘들아!","야들아","전부","전원","다들","모두","모두들","여러분","다 같이","다같이","다 모여","모여라","집합"];
     for(var i = 0; i < callAll.length; i++){
       if(lower.indexOf(callAll[i]) !== -1) return order.slice();
     }
-    var map = [["@몽이","mong"],["@써니비서","sunny"],["@한결비서","han"],["@다온비서","daon"]];
+    var map = [["@몽이","mong"],["@써니비서","sunny"],["@한결비서","han"],["@다온비서","daon"],["@별하비서","byul"]];
     var out = [];
     map.forEach(function(pair){
       if(lower.indexOf(pair[0]) !== -1) out.push(pair[1]);
     });
+    var sajuWords = ["사주","운세","궁합","택일","만세력","명리","길일","별하"];
+    for(var j = 0; j < sajuWords.length; j++){
+      if(lower.indexOf(sajuWords[j]) !== -1 && out.indexOf("byul") === -1) out.push("byul");
+    }
     return out.length ? out : ["mong"];
   }
 
@@ -1363,7 +1415,8 @@
     {who:"mong", desc:"전체 일정과 모닝 브리핑, 네 비서의 보고를 한곳에서 묶는 총괄 실장.", comment:"내일 7시 모닝 브리핑 준비 완료! 네 분 보고 모두 모아 한 번에 올릴게요."},
     {who:"sunny", desc:"리뷰노트·무신사·쿠팡 신청과 써니로그 대필, 네이버 클립 제작까지.", comment:"43번지 체크리스트 내일 오전 9시, 진미골 발표는 12/8 대기 중입니다."},
     {who:"han", desc:"대교씨엔에스·강원심층수 자금과 세무, 환율, KPI 자금 대시보드.", comment:"11/30 월말 마감 준비 중이고, 자금일보는 퇴근 전에 점검합니다."},
-    {who:"daon", desc:"투룸 이상 청약 점검, 건강검진 추적, 사주·결혼 준비, 히로시마 여행.", comment:"오늘 투룸 이상 청약 0건, 12/8 달러박스 알림 대기 중이에요."}
+    {who:"daon", desc:"투룸 이상 청약 점검, 건강검진 추적, 사주·결혼 준비, 히로시마 여행.", comment:"오늘 투룸 이상 청약 0건, 12/8 달러박스 알림 대기 중이에요."},
+    {who:"byul", desc:"만세력 원국과 결혼 택일, 궁합·연간 운세까지 조용히 보는 사주 비서.", comment:"1순위 9/23(토) 辛亥日로 정리해 두었고, 2027 창업운도 보고 있어요."}
   ];
 
   function renderTeam(){
@@ -1478,9 +1531,9 @@
   /* ── 오피스 맵 · 움직이는 비서 캐릭터 ───────── */
   var OFFICE_ZONE_NAME = {assembly:"대회의실", command:"지휘실", lounge:"라운지"};
   var OFFICE_ZONES = {
-    assembly: [[14,63],[22,76],[33,77],[42,72],[24,68],[36,73]],
-    command:  [[52,55],[56,56],[60,52],[63,52],[66,52],[67,58],[54,60]],
-    lounge:   [[55,76],[62,81],[70,79],[75,78],[79,73],[82,76]]
+    assembly: [[14,63],[22,76],[33,77],[42,72],[24,68],[36,73],[17,71],[29,64],[39,79]],
+    command:  [[52,55],[56,56],[60,52],[63,52],[66,52],[67,58],[54,60],[58,57],[69,54]],
+    lounge:   [[55,76],[62,81],[70,79],[75,78],[79,73],[82,76],[58,74],[73,82],[84,80]]
   };
   var AGENTS = [
     {id:"mong",  name:"몽이",      emoji:"🐻", cls:"av-mong",  zone:"command",
@@ -1490,7 +1543,9 @@
     {id:"han",   name:"한결 비서", emoji:"🐱", cls:"av-han",   zone:"command",
      lines:["월말 자금 마감 체크 중이에요 💼","자금일보 다시 맞춰볼게요!","11/30 세무 마감 준비 완료!"]},
     {id:"daon",  name:"다온 비서", emoji:"🐭", cls:"av-daon",  zone:"lounge",
-     lines:["투룸 청약 오늘도 0건이에요 🏠","히로시마 일정 살펴보는 중!","달러박스 알림 대기하고 있어요"]}
+     lines:["투룸 청약 오늘도 0건이에요 🏠","히로시마 일정 살펴보는 중!","달러박스 알림 대기하고 있어요"]},
+    {id:"byul",  name:"별하 비서", emoji:"🔮", cls:"av-byul",  zone:"assembly",
+     lines:["2028-09-23 택일 표 정리했어요 🔮","오늘 일진 살펴보는 중이에요","원국 펴 두고 기다릴게요 ✨"]}
   ];
 
   var officeTimer = null;
@@ -1591,7 +1646,7 @@
     var zones = Object.keys(OFFICE_ZONES);
     var zone = st.def.zone;
     if(Math.random() < 0.72){
-      var others = zones.filter(function(z){ return z !== zone && zoneCount(z) < 2; });
+      var others = zones.filter(function(z){ return z !== zone && zoneCount(z) < 3; });
       if(others.length) zone = others[Math.floor(Math.random() * others.length)];
     }
     st.def.zone = zone;
