@@ -401,9 +401,10 @@
   .agent-bubble{
     position:absolute;bottom:calc(100% + 2px);left:50%;transform:translate(-50%,4px) scale(.94);
     background:#fff;color:#7a3d59;border:1px solid #fbd6e6;border-radius:12px;
-    padding:5px 8px;font-size:9.5px;font-weight:700;line-height:1.35;white-space:nowrap;
+    padding:5px 8px;font-size:9.5px;font-weight:700;line-height:1.35;white-space:normal;
+    text-align:center;width:max-content;
     box-shadow:0 8px 18px rgba(196,86,140,.2);opacity:0;pointer-events:none;transition:.22s;
-    z-index:5;max-width:150px;
+    z-index:5;max-width:168px;
   }
   .agent-bubble::after{
     content:"";position:absolute;left:50%;bottom:-5px;width:8px;height:8px;background:#fff;
@@ -485,7 +486,7 @@
     .office-sub{font-size:10.5px}
     .office-cta{font-size:10.5px;padding:8px 11px}
     .agent-name{font-size:8px;padding:1px 5px}
-    .agent-bubble{font-size:9px;padding:4px 7px;max-width:124px}
+    .agent-bubble{font-size:9px;padding:4px 7px;max-width:136px}
     .pin{font-size:9.5px;padding:4px 8px 4px 7px;gap:4px}
     .office-foot{padding:9px 10px}
     .office-foot-note{font-size:9px}
@@ -1308,6 +1309,8 @@
       officeAgents.push(st);
       bubbleSide(st);
       el.addEventListener("click", function(){ greetAgent(st); });
+      el.addEventListener("pointerenter", function(){ st.paused = true; });
+      el.addEventListener("pointerleave", function(){ st.paused = false; });
       el.addEventListener("keydown", function(e){
         if(e.key === "Enter" || e.key === " "){ e.preventDefault(); greetAgent(st); }
       });
@@ -1319,7 +1322,7 @@
     st.bubble.textContent = text;
     st.bubble.classList.add("show");
     clearTimeout(st.bubbleTimer);
-    st.bubbleTimer = setTimeout(function(){ st.bubble.classList.remove("show"); }, 2800);
+    st.bubbleTimer = setTimeout(function(){ st.bubble.classList.remove("show"); }, 3400);
   }
 
   function greetAgent(st){
@@ -1355,6 +1358,7 @@
     var now = Date.now();
     officeAgents.forEach(function(st){
       if(now >= st.next){
+        if(st.paused){ st.next = now + 900; return; }
         moveAgent(st);
         st.next = now + rand(4200, 6200);
       }
@@ -1380,7 +1384,7 @@
     saveState();
     renderRoom();
     switchTab("meeting");
-    toast(OFFICE_ZONE_NAME[room] + "으로 이동했어요 ✨");
+    toast(OFFICE_ZONE_NAME[room] + "로 이동했어요 ✨");
   }
 
   /* ── 탭 전환 ────────────────────────────── */
