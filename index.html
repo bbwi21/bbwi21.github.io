@@ -554,6 +554,18 @@
     border:1px solid #fbdcea;background:#fff7fb;color:#a8396f;font-size:12px;font-weight:800;
   }
   .btn-ghost:hover{background:#ffe9f2;border-color:#f4a8c9}
+  .btn-test{
+    display:block;width:100%;height:40px;margin:0 0 8px;border-radius:14px;cursor:pointer;
+    border:1px dashed #f4a8c9;background:#fff;color:#a8396f;font-size:12px;font-weight:800;font-family:inherit;
+  }
+  .btn-test:hover{background:#fff4f9;border-color:#ef8db8}
+  .btn-test:disabled{opacity:.65;cursor:progress}
+  .ai-test-out{
+    margin:0 0 12px;font-size:11px;line-height:1.6;border-radius:12px;padding:9px 11px;
+    background:#f8f3f6;border:1px solid #eee3ea;color:#7a3d59;word-break:break-word;
+  }
+  .ai-test-out.ok{background:#e9f9f1;border-color:#c8f0dc;color:#2f8a63}
+  .ai-test-out.bad{background:#fdeef2;border-color:#f9cfe3;color:#a8396f}
   @media(max-width:560px){
     .head-right{gap:6px}
     .ai-btn{font-size:10px;padding:5px 8px;gap:4px}
@@ -565,8 +577,9 @@
   .toast{
     position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
     background:#8e2b57;color:#fff;font-size:12px;font-weight:700;
-    padding:10px 16px;border-radius:999px;box-shadow:0 10px 24px rgba(142,43,87,.28);
+    padding:10px 16px;border-radius:18px;box-shadow:0 10px 24px rgba(142,43,87,.28);
     opacity:0;pointer-events:none;transition:.22s;z-index:50;
+    max-width:min(92vw,520px);width:max-content;text-align:center;line-height:1.5;
   }
   .toast.show{opacity:1;transform:translate(-50%,0)}
 
@@ -776,6 +789,9 @@
     </div>
 
     <p class="security">🔒 입력하신 API 키는 이 기기(브라우저)에만 안전하게 저장되며, 서버나 실시간 DB에는 올라가지 않습니다.</p>
+
+    <button class="btn-test" id="aiTest" type="button">🧪 연결 테스트</button>
+    <p class="ai-test-out" id="aiTestOut" hidden></p>
 
     <div class="modal-btns">
       <button class="btn-primary" id="aiSave" type="button">저장</button>
@@ -1086,19 +1102,34 @@
     if(diff > 0) return {text:"D-" + diff, soon:diff <= 3};
     return {text:"D+" + (-diff), soon:false};
   }
-  function toast(msg){
+  function toast(msg, ms){
     var t = $("#toast");
     t.textContent = msg;
     t.classList.add("show");
     clearTimeout(toast._tm);
-    toast._tm = setTimeout(function(){ t.classList.remove("show"); }, 1700);
+    toast._tm = setTimeout(function(){ t.classList.remove("show"); }, ms || 1700);
   }
 
   /* ── AI 연결 (Google Gemini) ───────────────── */
   /* 키는 오직 이 브라우저의 localStorage에만 저장합니다. Firebase RTDB에는 올리지 않습니다. */
   var AI_STORE = "minseon.ai.config.v1";
-  var GEMINI_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash"];
+  /* 2026-11 현재 살아 있는 Flash 계열만 사용합니다.
+     · gemini-2.0-flash : 2026-06-01 서비스 종료(404) → 1순위로 쓰면 매번 실패
+     · gemini-2.5-flash : 2026-12-01부터 3.5-flash-lite로 자동 라우팅(신규 키는 접근 제한)
+     · Gemini 3 계열은 thinking이 기본 on(medium)이라 maxOutputTokens를 넉넉히 두고 level을 low로 낮춥니다. */
+  var GEMINI_MODELS = [
+    {id:"gemini-3.8-flash",      level:"low",     max:1600},
+    {id:"gemini-3.6-flash",      level:"low",     max:1600},
+    {id:"gemini-3.5-flash-lite", level:"minimal", max:1600}
+  ];
   var aiCfg = {key:"", enabled:true};
+  var aiLastError = "";
+
+  /* 키에 섞여 들어온 공백·줄바꿈·보이지 않는 문자를 제거 (복사-붙여넣기 사고 방지) */
+  function aiKey(raw){
+    var v = (raw === undefined || raw === null) ? aiCfg.key : raw;
+    return String(v || "").replace(/[\s\u200b\u200c\u200d\ufeff]+/g, "");
+  }
 
   var MINSEON_CTX =
     "민선 님 기본 맥락(늘 염두에 둘 것):\n" +
@@ -1160,7 +1191,7 @@
       if(!raw) return;
       var o = JSON.parse(raw);
       if(o && typeof o === "object"){
-        aiCfg.key = (typeof o.key === "string") ? o.key.trim() : "";
+        aiCfg.key = (typeof o.key === "string") ? aiKey(o.key) : "";
         aiCfg.enabled = (o.enabled === false) ? false : true;
       }
     }catch(e){ aiCfg.key = ""; aiCfg.enabled = true; }
@@ -1169,7 +1200,7 @@
   function saveAiCfg(){
     try{
       if(aiCfg.key || aiCfg.enabled === false){
-        localStorage.setItem(AI_STORE, JSON.stringify({key:aiCfg.key, enabled:aiCfg.enabled, savedAt:Date.now()}));
+        localStorage.setItem(AI_STORE, JSON.stringify({key:aiKey(), enabled:aiCfg.enabled, savedAt:Date.now()}));
       }else{
         localStorage.removeItem(AI_STORE);
       }
@@ -1208,6 +1239,18 @@
     if(!m) return;
     if(input) input.value = aiCfg.key || "";
     paintAiStatus();
+    var out = document.getElementById("aiTestOut");
+    if(out){
+      if(aiLastError){
+        out.hidden = false;
+        out.className = "ai-test-out bad";
+        out.textContent = "최근 호출 실패: " + aiLastError;
+      }else{
+        out.hidden = true;
+        out.className = "ai-test-out";
+        out.textContent = "";
+      }
+    }
     m.hidden = false;
     document.body.style.overflow = "hidden";
     setTimeout(function(){ if(input) input.focus(); }, 60);
@@ -1261,7 +1304,7 @@
 
     var save = document.getElementById("aiSave");
     if(save) save.addEventListener("click", function(){
-      var v = input ? input.value.trim() : "";
+      var v = input ? aiKey(input.value) : "";
       if(!v){
         if(input) input.focus();
         toast("Gemini API 키를 먼저 넣어 주세요");
@@ -1274,6 +1317,8 @@
       }
       aiCfg.key = v;
       aiCfg.enabled = true;
+      aiLastError = "";
+      if(input) input.value = v;
       var ok = saveAiCfg();
       paintAiStatus();
       paintAiBadge();
@@ -1287,11 +1332,71 @@
       if(!window.confirm("저장한 Gemini API 키를 이 브라우저에서 지울까요?")) return;
       aiCfg.key = "";
       aiCfg.enabled = true;
+      aiLastError = "";
       saveAiCfg();
       if(input) input.value = "";
+      var out = document.getElementById("aiTestOut");
+      if(out){ out.hidden = true; out.textContent = ""; out.className = "ai-test-out"; }
       paintAiStatus();
       paintAiBadge();
       toast("키를 지웠어요. 이제 기본 모드로 동작합니다");
+    });
+
+    /* 🧪 연결 테스트 — 입력된 키로 실제 Gemini를 한 번 불러 봅니다 */
+    var testBtn = document.getElementById("aiTest");
+    if(testBtn) testBtn.addEventListener("click", function(){ runAiTest(); });
+  }
+
+  function runAiTest(){
+    var input = document.getElementById("geminiKey");
+    var out = document.getElementById("aiTestOut");
+    var btn = document.getElementById("aiTest");
+    var key = aiKey(input ? input.value : "");
+    if(!out) return;
+    out.hidden = false;
+    if(!key || key.length < 20){
+      out.className = "ai-test-out bad";
+      out.textContent = "키를 먼저 붙여넣어 주세요. AI Studio에서 받은 키 전체를 넣어야 해요.";
+      if(input) input.focus();
+      return;
+    }
+    if(btn){ btn.disabled = true; btn.textContent = "테스트 중…"; }
+    out.className = "ai-test-out";
+    out.textContent = "Gemini에 연결해 보는 중이에요…";
+
+    var t0 = Date.now();
+    var idx = 0;
+    var tried = [];
+
+    function attempt(){
+      var model = GEMINI_MODELS[idx];
+      tried.push(model.id);
+      var body = {
+        contents:[{role:"user", parts:[{text:"연결 테스트입니다. '연결 성공'이라고만 답해 주세요."}]}],
+        generationConfig: genConfig(model, 900)
+      };
+      return geminiPost(body, model, 0, key).then(function(text){
+        var ms = Date.now() - t0;
+        aiLastError = "";
+        var extra = "";
+        if(key !== aiCfg.key) extra += " ‘저장’을 누르면 이 키로 답합니다.";
+        if(!aiCfg.enabled) extra += " 연결 스위치도 켜 주세요.";
+        out.className = "ai-test-out ok";
+        out.textContent = "성공! " + model.id + " · " + ms + "ms · 키가 정상 동작합니다." + extra +
+          " (응답: " + String(text).replace(/\s+/g, " ").slice(0, 30) + ")";
+      }).catch(function(err){
+        if(modelFallbackOk(err) && (idx + 1) < GEMINI_MODELS.length){
+          idx++;
+          return attempt();
+        }
+        aiLastError = aiErrorNote(err);
+        out.className = "ai-test-out bad";
+        out.textContent = "실패 — " + aiLastError + (tried.length > 1 ? " / 시도한 모델: " + tried.join(", ") : "");
+      });
+    }
+
+    attempt().then(function(){
+      if(btn){ btn.disabled = false; btn.textContent = "🧪 연결 테스트"; }
     });
   }
 
@@ -1310,7 +1415,13 @@
     return d.getFullYear() + "년 " + (d.getMonth()+1) + "월 " + d.getDate() + "일 (" + w + ")";
   }
 
-  function geminiBody(who, text, room){
+  function genConfig(model, maxTokens){
+    var cfg = {temperature:0.95, topP:0.95, maxOutputTokens:maxTokens || (model && model.max) || 1600};
+    if(model && model.level) cfg.thinkingConfig = {thinkingLevel:model.level};
+    return cfg;
+  }
+
+  function geminiBody(who, text, room, model){
     var ctx = recentContext(room, 8);
     var sys = AI_SYSTEM[who] || AI_SYSTEM.mong;
     var p = PEOPLE[who] || PEOPLE.mong;
@@ -1320,57 +1431,145 @@
       "민선 님이 방금 하신 말씀: " + text + "\n\n" +
       p.name + "으로서 이 말씀에 지금 바로 답해 주세요. 인사말은 짧게, 내용은 구체적으로.";
     return {
-      system_instruction:{parts:[{text:sys}]},
+      systemInstruction:{parts:[{text:sys}]},
       contents:[{role:"user", parts:[{text:userText}]}],
-      generationConfig:{temperature:0.95, topP:0.95, maxOutputTokens:600}
+      generationConfig: genConfig(model, model && model.max)
     };
+  }
+
+  /* 여러 비서 호출용 : 한 번의 호출로 각자 답변을 JSON 배열로 받습니다 */
+  function geminiGroupBody(targets, text, room, model){
+    var ctx = recentContext(room, 10);
+    var roster = targets.map(function(who, i){
+      var p = PEOPLE[who] || PEOPLE.mong;
+      return "[" + (i + 1) + "] " + p.name + " (" + p.role + ") · id=\"" + who + "\"\n" + (AI_SYSTEM[who] || AI_SYSTEM.mong);
+    }).join("\n\n");
+    var ids = targets.map(function(w){ return "\"" + w + "\""; }).join(", ");
+    var sys =
+      "당신은 김민선 님의 비서실에 있는 여러 비서를 한자리에서 동시에 연기하는 역할극 작가입니다.\n" +
+      "아래 각 비서의 인물 설정·말투·지식 범위를 그대로 지키면서, 한 사람당 한 번씩만 말합니다.\n\n" +
+      roster + "\n\n" +
+      "출력 형식(반드시 지킬 것):\n" +
+      "- JSON 배열 하나만 출력합니다. 인사말·설명·코드펜스 없이 배열만.\n" +
+      "- 원소는 {\"who\":\"...\",\"text\":\"...\"} 형태이고, who는 " + ids + " 중 하나입니다.\n" +
+      "- 위에 제시한 비서 순서 그대로 정확히 " + targets.length + "개를 출력합니다.\n" +
+      "- text는 그 비서의 말투로 2~3문장, 220자 이내의 평문입니다. 마크다운·과한 이모지 금지.\n" +
+      "- 서로의 말을 이어받아 회의실에서 대화하듯 자연스럽게 답하고, 같은 인사나 같은 문장을 반복하지 않습니다.\n" +
+      "- 민선 님을 부를 때는 '민선 님'이라고 씁니다.";
+    var userText =
+      "오늘은 " + todayKor() + "입니다.\n" +
+      (ctx ? "최근 회의실 대화(참고용):\n" + ctx + "\n\n" : "") +
+      "민선 님이 여러 비서에게 한꺼번에 말씀하셨습니다: " + text + "\n\n" +
+      "위 " + targets.length + "명이 각자 역할에 맞게 이 말씀에 답하는 JSON 배열을 지금 출력하세요.";
+    var cfg = genConfig(model, Math.max(2200, 700 * targets.length));
+    cfg.responseMimeType = "application/json";
+    cfg.responseSchema = {
+      type:"ARRAY",
+      items:{
+        type:"OBJECT",
+        properties:{who:{type:"STRING"}, text:{type:"STRING"}},
+        required:["who", "text"]
+      }
+    };
+    return {
+      systemInstruction:{parts:[{text:sys}]},
+      contents:[{role:"user", parts:[{text:userText}]}],
+      generationConfig: cfg
+    };
+  }
+
+  function dropThinking(body){
+    var b = JSON.parse(JSON.stringify(body));
+    if(b.generationConfig) delete b.generationConfig.thinkingConfig;
+    return b;
+  }
+
+  function dropSchema(body){
+    var b = JSON.parse(JSON.stringify(body));
+    if(b.generationConfig){
+      delete b.generationConfig.responseSchema;
+      delete b.generationConfig.responseMimeType;
+    }
+    return b;
   }
 
   function geminiText(j){
     try{
       var c = j && j.candidates && j.candidates[0];
       var parts = (c && c.content && c.content.parts) || [];
-      var out = parts.map(function(p){ return (p && p.text) ? p.text : ""; }).join("").trim();
+      var out = parts.map(function(p){
+        if(!p || p.thought) return "";      /* thinking 요약 파트는 답변에서 제외 */
+        return p.text || "";
+      }).join("").trim();
       return out;
     }catch(e){ return ""; }
   }
 
+  function geminiPost(body, model, mode, keyOverride){
+    mode = mode || 0;
+    var key = aiKey(keyOverride);
+    if(!key){
+      var e0 = new Error("API 키가 없습니다");
+      e0.status = 401; e0.msg = "API 키가 저장되어 있지 않아요"; e0.model = model.id;
+      return Promise.reject(e0);
+    }
+    var url = "https://generativelanguage.googleapis.com/v1beta/models/" + model.id +
+              ":generateContent?key=" + encodeURIComponent(key);
+    var ctrl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+    var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, 60000) : null;
+
+    return fetch(url, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(body),
+      signal: ctrl ? ctrl.signal : undefined
+    }).then(function(res){
+      if(timer) clearTimeout(timer);
+      return res.json().catch(function(){ return {}; }).then(function(j){
+        if(res.ok){
+          var t = geminiText(j);
+          if(t) return t;
+          var e = new Error("빈 응답");
+          e.status = 0; e.msg = "빈 응답(모델이 내용을 만들지 못했어요)"; e.model = model.id;
+          throw e;
+        }
+        var err = new Error("HTTP " + res.status);
+        err.status = res.status;
+        err.msg = (j && j.error && j.error.message) ? j.error.message : ("HTTP " + res.status);
+        err.model = model.id;
+        throw err;
+      });
+    }).catch(function(err){
+      if(timer) clearTimeout(timer);
+      err = err || new Error("network");
+      if(err.name === "AbortError"){
+        var te = new Error("timeout"); te.status = 0; te.msg = "응답 시간 초과"; te.model = model.id;
+        throw te;
+      }
+      var m = String(err.msg || err.message || "");
+      err.model = err.model || model.id;
+      /* 모델이 이 설정을 모를 때만 설정을 빼고 한 번 더 */
+      if(err.status === 400 && mode === 0 && /think/i.test(m)) return geminiPost(dropThinking(body), model, 1, keyOverride);
+      if(err.status === 400 && mode < 2 && /schema|mime/i.test(m)) return geminiPost(dropSchema(body), model, 2, keyOverride);
+      throw err;
+    });
+  }
+
+  function modelFallbackOk(err){
+    if(!err) return false;
+    var s = err.status || 0;
+    if(s === 404 || s === 429 || s >= 500) return true;
+    var m = String(err.msg || err.message || "");
+    return /not found|not supported|unsupported|no longer available|deprecated|decommission/i.test(m);
+  }
+
   function callGemini(who, text, room){
-    var body = geminiBody(who, text, room);
-    var i = 0;
-
+    var idx = 0;
     function attempt(){
-      var model = GEMINI_MODELS[i];
-      var url = "https://generativelanguage.googleapis.com/v1beta/models/" + model +
-                ":generateContent?key=" + encodeURIComponent(aiCfg.key);
-      var ctrl = (typeof AbortController !== "undefined") ? new AbortController() : null;
-      var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, 30000) : null;
-
-      return fetch(url, {
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(body),
-        signal: ctrl ? ctrl.signal : undefined
-      }).then(function(res){
-        if(timer) clearTimeout(timer);
-        return res.json().catch(function(){ return {}; }).then(function(j){
-          if(res.ok){
-            var t = geminiText(j);
-            if(t) return t;
-            var e = new Error("빈 응답"); e.status = 0; e.msg = "빈 응답"; throw e;
-          }
-          var err = new Error("HTTP " + res.status);
-          err.status = res.status;
-          err.msg = (j && j.error && j.error.message) ? j.error.message : ("HTTP " + res.status);
-          throw err;
-        });
-      }).catch(function(err){
-        if(timer) clearTimeout(timer);
-        err = err || new Error("network");
-        var m = String(err.msg || err.message || "");
-        var modelGone = (err.status === 404) || /not found|not supported|unsupported|no longer available/i.test(m);
-        if(modelGone && (i + 1) < GEMINI_MODELS.length){
-          i++;
+      var model = GEMINI_MODELS[idx];
+      return geminiPost(geminiBody(who, text, room, model), model).catch(function(err){
+        if(modelFallbackOk(err) && (idx + 1) < GEMINI_MODELS.length){
+          idx++;
           return attempt();
         }
         throw err;
@@ -1379,18 +1578,155 @@
     return attempt();
   }
 
+  /* 여러 명 호출 : Gemini 호출은 1회, 형식이 깨졌을 때만 다른 모델로 한 번 더 */
+  function callGeminiGroup(targets, text, room){
+    var idx = 0;
+    function attempt(){
+      var model = GEMINI_MODELS[idx];
+      return geminiPost(geminiGroupBody(targets, text, room, model), model).then(function(raw){
+        var list = parseGroupReply(raw, targets);
+        if(!list){
+          var e = new Error("JSON 형식이 아니에요");
+          e.status = 0; e.msg = "답변이 JSON 배열 형식이 아니에요"; e.model = model.id; e.soft = true;
+          throw e;
+        }
+        return list;
+      }).catch(function(err){
+        if((modelFallbackOk(err) || err.soft) && (idx + 1) < GEMINI_MODELS.length){
+          idx++;
+          return attempt();
+        }
+        throw err;
+      });
+    }
+    return attempt();
+  }
+
+  function whoId(v){
+    var flat = String(v || "").toLowerCase().replace(/[\s_\-·:]/g, "");
+    if(!flat) return "";
+    var ok = ["mong", "sunny", "han", "daon", "byul"];
+    if(ok.indexOf(flat) !== -1) return flat;
+    var aliases = {
+      "몽이":"mong", "몽":"mong", "mongi":"mong",
+      "써니":"sunny", "써니비서":"sunny", "sunny":"sunny",
+      "한결":"han", "한결비서":"han",
+      "다온":"daon", "다온비서":"daon",
+      "별하":"byul", "별하비서":"byul"
+    };
+    if(aliases[flat]) return aliases[flat];
+    for(var k in aliases){ if(aliases.hasOwnProperty(k) && flat.indexOf(k) !== -1) return aliases[k]; }
+    return "";
+  }
+
+  function parseGroupReply(raw, targets){
+    var s = String(raw || "").trim();
+    s = s.replace(/^```(?:json)?/i, "").replace(/```\s*$/, "").trim();
+    var a = s.indexOf("["), b = s.lastIndexOf("]");
+    if(a >= 0 && b > a) s = s.slice(a, b + 1);
+    var val = null;
+    try{ val = JSON.parse(s); }catch(e){ return null; }
+    if(val && !Array.isArray(val)){
+      if(Array.isArray(val.replies)) val = val.replies;
+      else if(val.who || val.text) val = [val];
+      else{
+        var flatList = [];
+        Object.keys(val).forEach(function(k){
+          var id = whoId(k);
+          if(id && typeof val[k] === "string") flatList.push({who:id, text:val[k]});
+        });
+        val = flatList;
+      }
+    }
+    if(!Array.isArray(val) || !val.length) return null;
+    var byWho = {};
+    val.forEach(function(o){
+      if(!o || typeof o !== "object") return;
+      var id = whoId(o.who || o.name || o.id || o.speaker);
+      var tx = "";
+      if(typeof o.text === "string") tx = o.text;
+      else if(typeof o.reply === "string") tx = o.reply;
+      else if(typeof o.message === "string") tx = o.message;
+      if(!id || !tx) return;
+      tx = cleanReply(tx);
+      if(!tx) return;
+      if(!byWho[id]) byWho[id] = tx;
+    });
+    var out = [];
+    targets.forEach(function(who){ if(byWho[who]) out.push({who:who, text:byWho[who]}); });
+    return out.length ? out : null;
+  }
+
+  /* 420ms 간격으로 한 사람씩 차례로 게시 */
+  function publishSequential(list, room, after){
+    var i = 0;
+    function step(){
+      if(i >= list.length){ if(after) after(); return; }
+      var item = list[i++];
+      delete typingSet[item.who];
+      pushMessage(room, {who:item.who, text:item.text, time:nowTime()});
+      setTimeout(step, 420);
+    }
+    step();
+  }
+
+  /* 개별 호출을 순차로 (동시 호출 금지). 두 번 연속 실패하면 남은 사람은 기본 답변 */
+  function callSoloSequential(list, text, room){
+    var i = 0, fails = 0, warned = false;
+    function localRest(startAt){
+      list.slice(startAt).forEach(function(who, k){
+        setTimeout(function(){
+          delete typingSet[who];
+          pushMessage(room, {who:who, text:buildReply(who, text), time:nowTime()});
+        }, k * 420);
+      });
+    }
+    function step(){
+      if(i >= list.length) return;
+      if(fails >= 2){ localRest(i); return; }
+      var who = list[i++];
+      callGemini(who, text, room).then(function(reply){
+        var body = cleanReply(reply);
+        if(!body) throw {status:0, msg:"빈 응답"};
+        fails = 0;
+        delete typingSet[who];
+        pushMessage(room, {who:who, text:body, time:nowTime()});
+      }).catch(function(err){
+        fails++;
+        aiLastError = aiErrorNote(err);
+        delete typingSet[who];
+        if(!warned){ warned = true; toast(aiLastError + " — 기본 답변으로 대신했어요", 6000); }
+        pushMessage(room, {who:who, text:buildReply(who, text), time:nowTime()});
+      }).then(function(){
+        setTimeout(step, 420);
+      });
+    }
+    step();
+  }
+
   function aiErrorNote(err){
     if(!err) return "Gemini 연결에 실패했어요";
     var s = err.status || 0;
     var m = String(err.msg || err.message || "").toLowerCase();
-    if(err.name === "AbortError") return "Gemini 응답이 너무 늦었어요";
-    if(s === 400 && /api key|api_key|key not valid|invalid/i.test(m)) return "API 키가 올바르지 않은 것 같아요";
-    if(s === 403) return "이 키로는 Gemini를 쓸 수 없어요 (권한·국가 제한)";
-    if(s === 429) return "오늘 무료 한도(분당·일일)를 넘었어요. 조금 뒤 다시 시도해 주세요";
-    if(s === 404) return "Gemini 모델을 찾지 못했어요";
-    if(s >= 500) return "Gemini 서버가 잠시 불안정해요";
-    if(/failed to fetch|network|load failed|err_failed/i.test(m)) return "네트워크 또는 키 제한으로 호출이 막혔어요";
-    return "Gemini 호출에 문제가 있었어요";
+    var head;
+    if(err.name === "AbortError" || /시간 초과|timeout/.test(m)) head = "Gemini 응답이 너무 늦었어요";
+    else if(s === 400 && /api key|api_key|key not valid|invalid|expired/i.test(m)) head = "API 키가 올바르지 않아요";
+    else if(s === 400) head = "요청 형식이 거부됐어요";
+    else if(s === 401 || s === 403) head = "이 키로는 Gemini를 쓸 수 없어요(권한·국가 제한)";
+    else if(s === 429) head = "무료 한도(분당·일일)를 넘었어요. 잠시 뒤 다시 시도해 주세요";
+    else if(s === 404) head = "Gemini 모델을 찾지 못했어요";
+    else if(s >= 500) head = "Gemini 서버가 잠시 불안정해요";
+    else if(/failed to fetch|network|load failed|err_failed/i.test(m)) head = "네트워크 또는 키 제한으로 호출이 막혔어요";
+    else if(/빈 응답/.test(m)) head = "모델이 빈 답을 돌려줬어요";
+    else if(/json/.test(m)) head = "답변이 정해진 JSON 형식이 아니었어요";
+    else head = "Gemini 호출에 문제가 있었어요";
+
+    var tail = [];
+    if(err.model) tail.push(err.model);
+    if(s) tail.push("HTTP " + s);
+    var detail = String(err.msg || "").replace(/\s+/g, " ").trim();
+    if(detail && !/^HTTP \d+$/.test(detail) && !/^빈 응답/.test(detail)) tail.push(detail.slice(0, 70));
+    return head + (tail.length ? " (" + tail.join(" · ") + ")" : "");
   }
 
   function cleanReply(t){
@@ -1402,27 +1738,41 @@
   }
 
   function respondWithAI(text, targets, room){
-    var warned = false;
-    targets.forEach(function(who){ typingSet[who] = true; });
-    var panel = document.getElementById("panel-meeting");
-    if(panel && panel.classList.contains("active")) renderRoom();
+    var list = (targets && targets.length) ? targets.slice() : ["mong"];
+    list.forEach(function(who){ typingSet[who] = true; });
+    if(state.room === room) renderRoom();
 
-    targets.forEach(function(who){
-      callGemini(who, text, room).then(function(reply){
+    if(list.length === 1){
+      var solo = list[0];
+      callGemini(solo, text, room).then(function(reply){
         var body = cleanReply(reply);
-        delete typingSet[who];
-        if(!body){
-          throw {status:0, msg:"빈 응답"};
-        }
-        pushMessage(room, {who:who, text:body, time:nowTime()});
+        if(!body) throw {status:0, msg:"빈 응답"};
+        aiLastError = "";
+        delete typingSet[solo];
+        pushMessage(room, {who:solo, text:body, time:nowTime()});
       }).catch(function(err){
-        delete typingSet[who];
-        if(!warned){
-          warned = true;
-          toast(aiErrorNote(err) + " — 기본 답변으로 대신했어요");
-        }
-        pushMessage(room, {who:who, text:buildReply(who, text), time:nowTime()});
+        delete typingSet[solo];
+        aiLastError = aiErrorNote(err);
+        toast(aiLastError + " — 기본 답변으로 대신했어요", 6000);
+        pushMessage(room, {who:solo, text:buildReply(solo, text), time:nowTime()});
       });
+      return;
+    }
+
+    /* 여러 명 호출: Gemini 호출은 딱 1회, 답변만 순차 게시 (무료 한도 1/5 · 서로 받아치는 대화) */
+    callGeminiGroup(list, text, room).then(function(replies){
+      aiLastError = "";
+      var have = {};
+      replies.forEach(function(r){ have[r.who] = true; });
+      var missing = list.filter(function(w){ return !have[w]; });
+      var ordered = replies.filter(function(r){ return list.indexOf(r.who) !== -1; });
+      publishSequential(ordered, room, function(){
+        if(missing.length) callSoloSequential(missing, text, room);
+      });
+    }).catch(function(err){
+      aiLastError = aiErrorNote(err);
+      toast(aiLastError + " — 한 명씩 다시 시도할게요", 6000);
+      callSoloSequential(list, text, room);
     });
   }
 
