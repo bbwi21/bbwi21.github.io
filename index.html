@@ -2461,7 +2461,7 @@
     assembly: [[16,42],[30,34],[37,53],[20,60],[31,63]],
     command:  [[47,41],[51,45],[59,44],[65,40]],
     work:     [[47,52],[53,58],[61,53],[69,47],[74,55]],
-    lounge:   [[57,64],[62,74],[70,76]]
+    lounge:   [[60,66],[64,72],[70,72]]
   };
   var AGENTS = [
     {id:"mong",  name:"몽이",      role:"비서실장 · 총괄",       img:"./char-mong.png?v=14",  zone:"command",
@@ -2506,7 +2506,7 @@
     for(var i = 0; i < 14; i++){
       var s = spots[Math.floor(Math.random() * spots.length)];
       var x = Math.max(10, Math.min(87, s[0] + rand(-1.2, 1.2)));
-      var y = Math.max(26, Math.min(77, s[1] + rand(-1.2, 1.2)));
+      var y = Math.max(26, Math.min(74, s[1] + rand(-1.2, 1.2)));
       var d = crowdDistance(x, y, self);
       if(d >= 8) return [x, y];
       if(d > bestD){ bestD = d; best = [x, y]; }
