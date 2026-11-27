@@ -2508,7 +2508,7 @@
       var x = Math.max(10, Math.min(87, s[0] + rand(-1.2, 1.2)));
       var y = Math.max(26, Math.min(74, s[1] + rand(-1.2, 1.2)));
       var d = crowdDistance(x, y, self);
-      if(d >= 8) return [x, y];
+      if(d >= 11) return [x, y];
       if(d > bestD){ bestD = d; best = [x, y]; }
     }
     return best || [40, 60];
@@ -2624,7 +2624,7 @@
   function moveAgent(st){
     var zones = Object.keys(OFFICE_ZONES);
     var zone = st.def.zone;
-    if(Math.random() < 0.68){
+    if(Math.random() < 0.55){
       var others = zones.filter(function(z){ return z !== zone && zoneCount(z) < 2; });
       if(others.length) zone = others[Math.floor(Math.random() * others.length)];
     }
