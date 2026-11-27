@@ -1113,15 +1113,18 @@
   /* ── AI 연결 (Google Gemini) ───────────────── */
   /* 키는 오직 이 브라우저의 localStorage에만 저장합니다. Firebase RTDB에는 올리지 않습니다. */
   var AI_STORE = "minseon.ai.config.v1";
-  /* 2026-11 현재 살아 있는 Flash 계열만 사용합니다.
-     · gemini-2.0-flash : 2026-06-01 서비스 종료(404) → 1순위로 쓰면 매번 실패
-     · gemini-2.5-flash : 2026-12-01부터 3.5-flash-lite로 자동 라우팅(신규 키는 접근 제한)
+  /* 2026-11 현재 살아 있는 Flash 계열만 사용합니다. 지연이 짧은 모델을 앞 순번에 둡니다.
+     · gemini-2.0-flash : 2026-06-01 서비스 종료(404) → 쓰지 않습니다
+     · gemini-3.5-flash-lite : 가장 빠르고 안정적 → 1순위
+     · gemini-2.5-flash : 2026-12-01부터 3.5-flash-lite로 자동 라우팅(신규 키는 접근 제한) → 마지막 순번, thinking은 budget 0으로 끕니다
      · Gemini 3 계열은 thinking이 기본 on(medium)이라 maxOutputTokens를 넉넉히 두고 level을 low로 낮춥니다. */
   var GEMINI_MODELS = [
-    {id:"gemini-3.8-flash",      level:"low",     max:1600},
+    {id:"gemini-3.5-flash-lite", level:"minimal", max:1600},
     {id:"gemini-3.6-flash",      level:"low",     max:1600},
-    {id:"gemini-3.5-flash-lite", level:"minimal", max:1600}
+    {id:"gemini-3.8-flash",      level:"low",     max:1600},
+    {id:"gemini-2.5-flash",      budget:0,        max:1600}
   ];
+  var GEMINI_TIMEOUT_MS = 15000;   /* 모델 한 번 호출의 최대 대기(15초) */
   var aiCfg = {key:"", enabled:true};
   var aiLastError = "";
 
@@ -1378,16 +1381,18 @@
       tried.push(model.id);
       var body = {
         contents:[{role:"user", parts:[{text:"연결 테스트입니다. '연결 성공'이라고만 답해 주세요."}]}],
-        generationConfig: genConfig(model, 900)
+        generationConfig: genConfig(model, 400)
       };
+      out.textContent = "Gemini에 연결해 보는 중이에요… (" + model.id + " · " + (idx + 1) + "/" + GEMINI_MODELS.length + ")";
       return geminiPost(body, model, 0, key).then(function(text){
         var ms = Date.now() - t0;
         aiLastError = "";
         var extra = "";
         if(key !== aiCfg.key) extra += " ‘저장’을 누르면 이 키로 답합니다.";
         if(!aiCfg.enabled) extra += " 연결 스위치도 켜 주세요.";
+        var skipped = (tried.length > 1) ? " (앞선 " + (tried.length - 1) + "개 모델은 느리거나 실패해 건너뛰었어요: " + tried.slice(0, -1).join(", ") + ")" : "";
         out.className = "ai-test-out ok";
-        out.textContent = "성공! " + model.id + " · " + ms + "ms · 키가 정상 동작합니다." + extra +
+        out.textContent = "성공! " + model.id + " · " + ms + "ms · 키가 정상 동작합니다." + skipped + extra +
           " (응답: " + String(text).replace(/\s+/g, " ").slice(0, 30) + ")";
       }).catch(function(err){
         if(modelFallbackOk(err) && (idx + 1) < GEMINI_MODELS.length){
@@ -1423,6 +1428,7 @@
   function genConfig(model, maxTokens){
     var cfg = {temperature:0.95, topP:0.95, maxOutputTokens:maxTokens || (model && model.max) || 1600};
     if(model && model.level) cfg.thinkingConfig = {thinkingLevel:model.level};
+    else if(model && typeof model.budget === "number") cfg.thinkingConfig = {thinkingBudget:model.budget};
     return cfg;
   }
 
@@ -1521,7 +1527,8 @@
     var url = "https://generativelanguage.googleapis.com/v1beta/models/" + model.id +
               ":generateContent?key=" + encodeURIComponent(key);
     var ctrl = (typeof AbortController !== "undefined") ? new AbortController() : null;
-    var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, 60000) : null;
+    /* 한 모델을 오래 붙잡지 않습니다. 15초 안에 답이 없으면 끊고 바로 다음 순위 모델로 넘어갑니다. */
+    var timer = ctrl ? setTimeout(function(){ ctrl.abort(); }, GEMINI_TIMEOUT_MS) : null;
 
     return fetch(url, {
       method:"POST",
@@ -1563,8 +1570,13 @@
   function modelFallbackOk(err){
     if(!err) return false;
     var s = err.status || 0;
-    if(s === 404 || s === 429 || s >= 500) return true;
+    if(s === 404 || s === 408 || s === 429 || s >= 500) return true;
+    /* 응답 시간 초과·중단도 다음 모델로 넘어갈 사유입니다 (느린 모델 하나에 매달리지 않음) */
+    if(err.name === "AbortError" || err.message === "timeout" || err.msg === "응답 시간 초과") return true;
     var m = String(err.msg || err.message || "");
+    if(/시간\s*초과|timeout|timed out|aborted/i.test(m)) return true;
+    /* 내용을 하나도 못 만든 빈 응답도 다음 모델로 */
+    if(/^빈 응답/.test(m)) return true;
     return /not found|not supported|unsupported|no longer available|deprecated|decommission/i.test(m);
   }
 
