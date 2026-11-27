@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff5f9">
+<title>👑 민선 님 전용 비서실</title>
+<style>
+  :root{
+    --bg:#fff9fb;
+    --card:#ffffff;
+    --surface:#fff5f9;
+    --surface2:#ffeef5;
+    --line:#fbdcea;
+    --line-soft:#fde9f2;
+    --pink:#ffd6e7;
+    --pink-2:#ffe9f2;
+    --accent:#f472b6;
+    --accent-2:#ff8fb8;
+    --accent-d:#db4b93;
+    --rose:#5a2b3f;
+    --ink:#4a2e3a;
+    --ink-soft:#6b4a57;
+    --muted:#8f6b7e;
+    --green:#4cbf8f;
+    --shadow:0 20px 50px rgba(244,114,182,.16);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"Apple SD Gothic Neo","Pretendard","Malgun Gothic","Noto Sans KR",-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1000px 520px at 6% -8%, #fff2f8 0%, rgba(255,242,248,0) 60%),
+      radial-gradient(900px 520px at 102% -4%, #ffe6f1 0%, rgba(255,230,241,0) 58%),
+      linear-gradient(165deg,#fffafc 0%,#fff5f9 55%,#ffeef5 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:radial-gradient(rgba(244,114,182,.13) 1px, transparent 1.4px);
+    background-size:24px 24px;opacity:.5;
+  }
+  button{font-family:inherit}
+  button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+    outline:2px solid #f4a0c6;outline-offset:2px;
+  }
+
+  .stage{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:26px 18px 34px}
+  .app{
+    background:var(--card);
+    border-radius:30px;
+    border:1px solid #ffe1ee;
+    box-shadow:var(--shadow),0 0 0 6px rgba(255,255,255,.55);
+    overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+
+  /* ── 헤더 ───────────────────────────── */
+  .app-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:18px 22px 16px;
+    background:linear-gradient(180deg,#fff9fc,#ffeef7);
+    border-bottom:1px solid var(--line);
+  }
+  .head-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1 1 auto}
+  .crown{
+    width:44px;height:44px;flex:0 0 44px;border-radius:50%;
+    display:grid;place-items:center;font-size:21px;
+    background:linear-gradient(145deg,#ffe4f0,#ffc6de);
+    box-shadow:inset 0 0 0 1px #ffd0e4,0 5px 12px rgba(244,114,182,.24);
+    position:relative;
+  }
+  .crown::after{
+    content:"✦";position:absolute;right:-3px;bottom:-3px;width:17px;height:17px;
+    border-radius:50%;background:#fff;color:#f472b6;font-size:9px;line-height:1;
+    display:grid;place-items:center;box-shadow:0 2px 6px rgba(244,114,182,.35);
+    border:1px solid #ffe0ee;
+  }
+  h1{
+    margin:0;font-size:18px;font-weight:800;letter-spacing:-.02em;color:var(--rose);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .sub{
+    margin:4px 0 0;font-size:11.5px;color:var(--muted);
+    display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.4;
+  }
+  .dot-mini{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex:0 0 6px}
+  .sep{opacity:.55}
+  .live{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11.5px;font-weight:800;color:#2f8a63;
+    background:#e9f9f1;border:1px solid #c8f0dc;
+    padding:6px 11px;border-radius:999px;white-space:nowrap;flex:0 0 auto;
+  }
+  .live .dot{
+    width:7px;height:7px;border-radius:50%;background:var(--green);
+    box-shadow:0 0 0 0 rgba(76,191,143,.5);animation:pulse 2.2s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(76,191,143,.45)}
+    70%{box-shadow:0 0 0 7px rgba(76,191,143,0)}
+    100%{box-shadow:0 0 0 0 rgba(76,191,143,0)}
+  }
+
+  /* ── 메인 탭 ────────────────────────── */
+  .tabs{
+    display:flex;gap:6px;padding:10px 12px;
+    background:#fff2f8;border-bottom:1px solid var(--line);
+    overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex:1 0 auto;display:flex;align-items:center;justify-content:center;gap:6px;
+    padding:10px 8px;border:0;border-radius:15px;background:transparent;
+    color:#a97f92;font-size:13px;font-weight:800;cursor:pointer;transition:.18s;
+    white-space:nowrap;
+  }
+  .tab:hover{background:#ffe6f1;color:#c2477f}
+  .tab .ic{font-size:15px;line-height:1}
+  .tab.active{
+    background:linear-gradient(160deg,#ff9ec9,#f062a9);
+    color:#fff;box-shadow:0 8px 18px rgba(240,98,169,.28);
+  }
+
+  .panel{display:none;padding:16px 18px 20px}
+  .panel.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* ── 회의실 ─────────────────────────── */
+  .room-head{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;flex-wrap:wrap;margin-bottom:10px;
+  }
+  .subtabs{display:flex;gap:7px;flex-wrap:wrap}
+  .subtab{
+    border:1px solid #fbd9e8;background:#fff;color:#a97f92;
+    font-size:12px;font-weight:800;padding:7px 13px;border-radius:999px;
+    cursor:pointer;transition:.18s;white-space:nowrap;
+  }
+  .subtab:hover{border-color:#f5b6d1;color:#c2477f}
+  .subtab.active{
+    background:#fff;border-color:#f7b3cf;color:#d6337f;
+    box-shadow:0 3px 10px rgba(244,114,182,.2);
+  }
+  .room-meta{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;padding-left:2px}
+
+  .chat-wrap{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:linear-gradient(180deg,#fff8fc,#fff2f8)}
+  .chat-scroll{height:clamp(300px,42vh,430px);overflow-y:auto;padding:16px 14px 6px;scroll-behavior:smooth;overscroll-behavior:contain}
+  .chat-scroll::-webkit-scrollbar{width:6px}
+  .chat-scroll::-webkit-scrollbar-thumb{background:#f8cfe2;border-radius:99px}
+
+  .msg{display:flex;gap:9px;margin-bottom:14px;animation:pop .22s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .avatar{
+    width:34px;height:34px;flex:0 0 34px;border-radius:50%;
+    display:grid;place-items:center;font-size:15px;font-weight:800;color:#c2477f;
+    border:2px solid #fff;box-shadow:0 3px 8px rgba(244,114,182,.18);
+  }
+  .av-mong{background:linear-gradient(160deg,#ffe3ef,#ffc9e0);color:#c2477f}
+  .av-sunny{background:linear-gradient(160deg,#fff1d8,#ffe1b3);color:#b57b32}
+  .av-han{background:linear-gradient(160deg,#e4efff,#d3e4ff);color:#5b78b5}
+  .av-daon{background:linear-gradient(160deg,#e4f7ea,#d2f0dd);color:#4f8f68}
+  .av-me{background:linear-gradient(160deg,#ffe6f1,#ffd0e5)}
+  .msg .body{display:flex;flex-direction:column;align-items:flex-start;min-width:0;max-width:86%}
+  .who{display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap}
+  .nm{font-size:11.5px;font-weight:800;color:#7a3d59}
+  .rl{font-size:10px;color:#9c6f85;background:#fff0f7;border-radius:999px;padding:2px 7px;white-space:nowrap}
+  .tm{font-size:10px;color:#a9808f}
+  .bubble{
+    background:#fff;border:1px solid #fbdcea;
+    border-radius:4px 16px 16px 16px;
+    padding:11px 14px;font-size:13.5px;line-height:1.65;color:var(--ink);
+    box-shadow:0 3px 10px rgba(244,114,182,.07);
+    white-space:pre-wrap;word-break:break-word;
+  }
+  .msg.me{flex-direction:row-reverse}
+  .msg.me .body{align-items:flex-end;max-width:88%}
+  .msg.me .who{flex-direction:row;justify-content:flex-end}
+  .msg.me .nm{color:#a8396f}
+  .msg.me .bubble{
+    background:linear-gradient(160deg,#ffe0ee,#ffcbe3);
+    border-color:#f9bcd6;border-radius:16px 4px 16px 16px;color:var(--rose);
+  }
+  .typing .bubble{display:flex;gap:4px;align-items:center;padding:13px 16px}
+  .typing .bubble i{width:6px;height:6px;border-radius:50%;background:#eda6c5;display:block;animation:bounce 1s infinite}
+  .typing .bubble i:nth-child(2){animation-delay:.15s}
+  .typing .bubble i:nth-child(3){animation-delay:.3s}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.55}30%{transform:translateY(-4px);opacity:1}}
+
+  .composer{background:#fff7fb;border-top:1px solid var(--line);padding:10px 12px 12px}
+  .chips{display:flex;gap:6px;overflow-x:auto;padding:1px 1px 8px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{
+    border:1px solid #fbd9e8;background:#fff;color:#a4738a;
+    font-size:11.5px;font-weight:800;padding:6px 11px;border-radius:999px;
+    white-space:nowrap;cursor:pointer;transition:.15s;flex:0 0 auto;
+  }
+  .chip:hover{border-color:#f5b6d1;color:#d6337f;background:#fff5fa}
+  .chip.all{background:linear-gradient(160deg,#ffe1ee,#ffc9e2);border-color:#f7b6d2;color:#b13a72}
+  .input-row{display:flex;gap:8px;align-items:flex-end}
+  #chatInput{
+    flex:1;resize:none;border:1px solid #fbd6e6;background:#fff;
+    border-radius:16px;padding:11px 14px;font-family:inherit;font-size:13.5px;
+    line-height:1.5;color:var(--ink);min-height:44px;max-height:110px;outline:none;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  #chatInput:focus{border-color:#f4a8cb;box-shadow:0 0 0 3px rgba(244,168,203,.22)}
+  .send{
+    width:44px;height:44px;flex:0 0 44px;border-radius:50%;border:0;
+    background:linear-gradient(160deg,#ff8fb8,#ef5fa4);color:#fff;font-size:18px;
+    cursor:pointer;box-shadow:0 8px 16px rgba(240,95,164,.3);
+    display:grid;place-items:center;transition:.15s;
+  }
+  .send:hover{filter:brightness(1.05)}
+  .send:active{transform:scale(.94)}
+
+  /* ── 작업실 ─────────────────────────── */
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .filters{display:flex;gap:6px;flex-wrap:wrap}
+  .filter{
+    border:1px solid #fbdceb;background:#fff;color:#a4738a;
+    font-size:12px;font-weight:800;padding:7px 13px;border-radius:999px;
+    cursor:pointer;transition:.15s;
+  }
+  .filter:hover{border-color:#f5b6d1;color:#c2477f}
+  .filter.active{background:linear-gradient(160deg,#ff9ec9,#f062a9);border-color:transparent;color:#fff;box-shadow:0 6px 14px rgba(240,98,169,.26)}
+  .filter .cnt{opacity:.8;font-weight:700;margin-left:2px}
+
+  .progress{
+    display:flex;align-items:center;gap:10px;
+    padding:12px 14px;background:#fff4f9;border:1px solid var(--line);
+    border-radius:16px;margin-bottom:14px;
+  }
+  .bar{flex:1;height:8px;border-radius:99px;background:#ffe3ef;overflow:hidden}
+  .bar>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffb6d5,#f472b6);border-radius:99px;transition:width .35s ease}
+  .pg-text{font-size:11.5px;color:#9d6d84;font-weight:800;white-space:nowrap}
+
+  .task-list{display:grid;gap:10px}
+  .task{
+    position:relative;display:flex;gap:11px;padding:13px 14px;
+    background:#fff;border:1px solid var(--line);border-radius:18px;
+    transition:.18s;
+  }
+  .task:hover{box-shadow:0 10px 24px rgba(244,114,182,.12);transform:translateY(-1px);border-color:#f7c9df}
+  .task.done{background:#fff8fc;opacity:.94}
+  .task.done .t-title{text-decoration:line-through;color:#ab8998}
+  .check{
+    width:22px;height:22px;flex:0 0 22px;border-radius:50%;
+    border:2px solid #f7c6dc;background:#fff;margin-top:2px;cursor:pointer;
+    display:grid;place-items:center;font-size:11px;color:transparent;padding:0;transition:.15s;
+  }
+  .check:hover{border-color:#f08dbb}
+  .task.done .check{background:#f472b6;border-color:#f472b6;color:#fff}
+  .t-body{min-width:0;flex:1;padding-right:14px}
+  .t-title{font-size:13.5px;font-weight:800;color:var(--ink);line-height:1.45;letter-spacing:-.01em}
+  .t-meta{font-size:11.5px;color:#a4738a;margin-top:4px;line-height:1.5}
+  .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+  .tag{font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px}
+  .tag.exp{background:#ffe3ef;color:#c2477f}
+  .tag.fin{background:#e8eefc;color:#5b78b5}
+  .tag.life{background:#e4f5e9;color:#4f8f68}
+  .tag.dday{background:#ffedf4;color:#b13a72}
+  .tag.who{background:#f7f0f4;color:#8a6c7b}
+  .tag.dday.soon{background:#ffd9e7;color:#c2185b}
+  .del{
+    position:absolute;right:7px;top:7px;border:0;background:transparent;
+    color:#e0c2d2;font-size:15px;line-height:1;cursor:pointer;padding:3px 5px;border-radius:8px;
+  }
+  .del:hover{color:#d6337f;background:#fff0f6}
+
+  .add-box{margin-top:16px;padding:14px;background:#fff5fa;border:1px dashed #f9c9de;border-radius:18px}
+  .add-title{font-size:11.5px;font-weight:800;color:#9d6d84;margin-bottom:9px}
+  .add-row{display:flex;gap:8px;flex-wrap:wrap}
+  .add-row input[type=text]{
+    flex:1 1 210px;min-width:0;border:1px solid #fbd6e6;background:#fff;
+    border-radius:13px;padding:10px 12px;font-family:inherit;font-size:12.5px;color:var(--ink);outline:none;
+  }
+  .add-row input[type=date],.add-row select{
+    border:1px solid #fbd6e6;background:#fff;border-radius:13px;
+    padding:10px 10px;font-family:inherit;font-size:12.5px;color:#7a5568;outline:none;
+  }
+  .btn-add{
+    background:linear-gradient(160deg,#ff8fb8,#ef5fa4);color:#fff;border:0;
+    border-radius:13px;padding:10px 16px;font-weight:800;font-size:12.5px;cursor:pointer;
+    box-shadow:0 6px 14px rgba(240,95,164,.24);
+  }
+  .btn-add:hover{filter:brightness(1.05)}
+
+  /* ── 비서현황 ───────────────────────── */
+  .sec-title{font-size:13px;font-weight:800;color:var(--rose);margin:0 0 11px;display:flex;align-items:center;gap:6px}
+  .team-grid{display:grid;gap:12px}
+  .member{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 4px 14px rgba(244,114,182,.05)}
+  .m-head{display:flex;align-items:center;gap:11px}
+  .m-avatar{
+    width:48px;height:48px;flex:0 0 48px;border-radius:50%;
+    display:grid;place-items:center;font-size:21px;font-weight:800;color:#c2477f;
+    border:2px solid #fff;box-shadow:0 5px 12px rgba(244,114,182,.18);
+  }
+  .m-id{min-width:0;flex:1}
+  .m-name{font-size:14px;font-weight:800;color:var(--ink)}
+  .m-role{font-size:11px;color:#a4738a;margin-top:2px}
+  .state{font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:999px;white-space:nowrap;flex:0 0 auto}
+  .state.on{background:#ffe8f2;color:#c2477f;border:1px solid #fbd0e3}
+  .state.off{background:#f7f2f5;color:#a9899a;border:1px solid #efe4ea}
+  .m-desc{font-size:11.5px;color:#8a6c7b;margin-top:11px;line-height:1.6}
+  .m-stats{display:flex;gap:8px;margin-top:12px}
+  .stat{flex:1;background:#fff6fa;border-radius:12px;padding:8px 6px;text-align:center}
+  .stat b{display:block;font-size:15px;color:#b13a72}
+  .stat span{font-size:10px;color:#a9808f}
+  .m-comment{margin-top:11px;font-size:11.5px;color:#8a6c7b;background:#fff6fa;border-radius:12px;padding:9px 11px;line-height:1.55}
+
+  /* ── 메모 ───────────────────────────── */
+  .memo-add{display:flex;gap:8px;margin-bottom:14px}
+  #memoInput{
+    flex:1;min-width:0;border:1px solid #fbd6e6;background:#fff;
+    border-radius:14px;padding:12px 14px;font-family:inherit;font-size:13px;color:var(--ink);outline:none;
+  }
+  #memoInput:focus{border-color:#f4a8cb;box-shadow:0 0 0 3px rgba(244,168,203,.22)}
+  .memo-list{display:grid;gap:8px}
+  .memo{
+    display:flex;gap:10px;align-items:flex-start;background:#fff;
+    border:1px solid var(--line);border-radius:16px;padding:12px 13px;
+  }
+  .memo .check{width:20px;height:20px;flex:0 0 20px;margin-top:0;font-size:10px}
+  .memo.done{background:#fff8fc}
+  .memo.done .check{background:#f472b6;border-color:#f472b6;color:#fff}
+  .memo.done .mt{text-decoration:line-through;color:#c2a3b2}
+  .mt{font-size:13px;color:var(--ink);line-height:1.5;flex:1;word-break:break-word}
+  .mt small{display:block;font-size:10px;color:#a9808f;margin-top:3px;text-decoration:none}
+
+  .empty{
+    text-align:center;font-size:12px;color:#a9808f;
+    padding:26px 10px;background:#fffafc;border:1px dashed #f9d3e4;border-radius:16px;line-height:1.7;
+  }
+
+  .foot{text-align:center;font-size:10.5px;color:#a9808f;margin:14px 0 0;line-height:1.6}
+
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);
+    background:#8e2b57;color:#fff;font-size:12px;font-weight:700;
+    padding:10px 16px;border-radius:999px;box-shadow:0 10px 24px rgba(142,43,87,.28);
+    opacity:0;pointer-events:none;transition:.22s;z-index:50;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  @media(min-width:760px){
+    .task-list,.memo-list{grid-template-columns:1fr 1fr}
+    .team-grid{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:560px){
+    .stage{padding:10px 8px 24px}
+    .app{border-radius:22px}
+    .app-head{padding:14px 14px 12px}
+    h1{font-size:15.5px}
+    .crown{width:38px;height:38px;flex-basis:38px;font-size:18px}
+    .live{font-size:10px;padding:5px 8px;gap:4px}
+    .tab{font-size:11.5px;padding:9px 4px;gap:4px}
+    .tab .ic{font-size:13px}
+    .panel{padding:12px 12px 16px}
+    .chat-scroll{height:clamp(280px,47vh,410px);padding:13px 10px 4px}
+    .bubble{font-size:12.5px;padding:10px 12px}
+    .msg .body{max-width:88%}
+    .sub{font-size:10.5px}
+    .sub .sep,#headDate{display:none}
+    .room-head{flex-direction:column;align-items:flex-start;gap:7px}
+    .room-meta{font-size:10.5px}
+    #chatInput,#memoInput,.add-row input[type=text],.add-row input[type=date],.add-row select{font-size:16px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="app">
+    <header class="app-head">
+      <div class="head-left">
+        <div class="crown" aria-hidden="true">👑</div>
+        <div style="min-width:0">
+          <h1>민선 님 전용 비서실</h1>
+          <p class="sub">
+            <span class="dot-mini" aria-hidden="true"></span>
+            <span>김민선 님 전용 · 몽이 총괄</span>
+            <span class="sep" aria-hidden="true">·</span>
+            <span id="headDate">오늘</span>
+          </p>
+        </div>
+      </div>
+      <div class="live"><span class="dot" aria-hidden="true"></span>실시간 연결</div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="비서실 메뉴">
+      <button class="tab active" role="tab" aria-selected="true" aria-controls="panel-meeting" data-tab="meeting"><span class="ic" aria-hidden="true">💬</span>회의실</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-work" data-tab="work"><span class="ic" aria-hidden="true">📋</span>작업실</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-team" data-tab="team"><span class="ic" aria-hidden="true">👥</span>비서현황</button>
+      <button class="tab" role="tab" aria-selected="false" aria-controls="panel-memo" data-tab="memo"><span class="ic" aria-hidden="true">📝</span>메모</button>
+    </nav>
+
+    <!-- 회의실 -->
+    <section class="panel active" id="panel-meeting" role="tabpanel" aria-label="회의실">
+      <div class="room-head">
+        <div class="subtabs" role="group" aria-label="회의실 선택">
+          <button class="subtab active" data-room="assembly" aria-pressed="true">🏛️ 대회의실</button>
+          <button class="subtab" data-room="command" aria-pressed="false">🎯 지휘실</button>
+          <button class="subtab" data-room="lounge" aria-pressed="false">☕ 라운지</button>
+        </div>
+        <div class="room-meta" id="roomMeta">🏛️ 대회의실 · ON 5명</div>
+      </div>
+
+      <div class="chat-wrap">
+        <div class="chat-scroll" id="chatScroll" role="log" aria-live="polite" aria-label="비서실 대화"></div>
+        <div class="composer">
+          <div class="chips" aria-label="멘션 칩">
+            <button class="chip all" data-mention="@all">@all</button>
+            <button class="chip" data-mention="@몽이">@몽이</button>
+            <button class="chip" data-mention="@써니비서">@써니비서</button>
+            <button class="chip" data-mention="@한결비서">@한결비서</button>
+            <button class="chip" data-mention="@다온비서">@다온비서</button>
+          </div>
+          <div class="input-row">
+            <textarea id="chatInput" rows="1" placeholder="민선 님, 시키실 일을 적어주세요. (예: @써니비서 내일 43번지 준비물 챙겨줘)" aria-label="지시 입력"></textarea>
+            <button class="send" id="sendBtn" aria-label="전송">↑</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 작업실 -->
+    <section class="panel" id="panel-work" role="tabpanel" aria-label="작업실">
+      <div class="toolbar">
+        <div class="filters" role="group" aria-label="작업 필터">
+          <button class="filter active" data-filter="all">전체 <span class="cnt">0</span></button>
+          <button class="filter" data-filter="exp">체험단 <span class="cnt">0</span></button>
+          <button class="filter" data-filter="fin">재무 <span class="cnt">0</span></button>
+          <button class="filter" data-filter="life">생활 <span class="cnt">0</span></button>
+        </div>
+      </div>
+      <div class="progress">
+        <div class="bar"><span id="pgBar"></span></div>
+        <div class="pg-text" id="pgText">완료 0 / 0</div>
+      </div>
+      <div class="task-list" id="taskList"></div>
+
+      <div class="add-box">
+        <div class="add-title">새 작업 추가</div>
+        <div class="add-row">
+          <input type="text" id="newTitle" placeholder="무엇을 할까요? (예: 12/2 43번지 리뷰 마감 확인)" aria-label="새 작업 이름">
+          <select id="newCat" aria-label="분류">
+            <option value="exp">체험단</option>
+            <option value="fin">재무</option>
+            <option value="life">생활</option>
+          </select>
+          <input type="date" id="newDue" aria-label="마감일 (선택)">
+          <button class="btn-add" id="addTaskBtn">+ 추가</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 비서현황 -->
+    <section class="panel" id="panel-team" role="tabpanel" aria-label="비서현황">
+      <h2 class="sec-title">👥 우리 비서실 4인</h2>
+      <div class="team-grid" id="teamGrid"></div>
+    </section>
+
+    <!-- 메모 -->
+    <section class="panel" id="panel-memo" role="tabpanel" aria-label="메모">
+      <h2 class="sec-title">📝 민선 님의 메모장</h2>
+      <div class="memo-add">
+        <input type="text" id="memoInput" placeholder="기억해 둘 일을 적어주세요" aria-label="새 메모">
+        <button class="btn-add" id="addMemoBtn">+ 추가</button>
+      </div>
+      <div class="memo-list" id="memoList"></div>
+      <p class="foot" id="memoCount">메모 0개</p>
+    </section>
+  </div>
+  <p class="foot">민선 님만의 작은 비서실 · 입력한 내용은 이 브라우저에만 저장되고 밖으로 나가지 않아요</p>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ── 기본 데이터 ───────────────────────── */
+  var PEOPLE = {
+    mong:  {name:"몽이",       role:"총괄 실장",        emoji:"ㅊ", av:"av-mong"},
+    sunny: {name:"써니 비서",  role:"체험단·블로그 팀장", emoji:"✍️", av:"av-sunny"},
+    han:   {name:"한결 비서",  role:"재무·자금 비서",    emoji:"💼", av:"av-han"},
+    daon:  {name:"다온 비서",  role:"청약·생활 케어 비서", emoji:"🏠", av:"av-daon"},
+    me:    {name:"민선 님",    role:"비서실 주인",       emoji:"👑", av:"av-me"}
+  };
+
+  var ROOM_INFO = {
+    assembly:{icon:"🏛️", name:"대회의실"},
+    command: {icon:"🎯", name:"지휘실"},
+    lounge:  {icon:"☕", name:"라운지"}
+  };
+
+  var SEED_ROOMS = {
+    assembly:[
+      {who:"mong",  time:"오후 5:31", text:"오늘(11/27 금) 저녁 보고입니다. 체험단 대기 26건 정리는 써니, 월말 자금·세무 준비는 한결, 청약·생활 케어는 다온이 맡아 확인했습니다. 세 팀 모두 특이 이슈 없이 마무리 중입니다 🌸"},
+      {who:"sunny", time:"오후 5:33", text:"내일(11/28) 저녁 8시 43번지혼술바 을지로점 방문 체크리스트 내일 오전 9시에 올리겠습니다! 신사 진미골 신청도 완료했어요. 사진 15장 이상, 짧은 영상, 15초 세로 클립까지 챙길게요 ✍️"},
+      {who:"han",   time:"오후 5:35", text:"11/30 월말 세무 마감과 한은 금통위 3.25% 반영 자금 체크 중입니다. 원천세·법인세 중간예납 일정은 표로 정리해 다음 주 월요일 브리핑에 올리겠습니다 💼"},
+      {who:"daon",  time:"오후 5:36", text:"투룸 이상 청약 오늘 0건 확인했고, 12/8 달러박스 알림도 대기 중입니다. 히로시마는 1/28 자동결제와 1/30 무료취소 기한만 남았어요 🏠"},
+      {who:"me",    time:"오후 5:41", text:"고마워요 다들, 내일 43번지 준비 잘 부탁해요!"},
+      {who:"sunny", time:"오후 5:42", text:"네, 민선 님! 내일 오전 9시 체크리스트로 딱 맞춰 뵙겠습니다 ☺️"}
+    ],
+    command:[
+      {who:"me",    time:"오후 5:12", text:"@all 이번 주 체험단은 관악·동작·서초·강남 4개 구, 요식업이나 물건, 12/20 이후 마감만! 나머지는 발표 전에 다 정리해줘"},
+      {who:"sunny", time:"오후 5:13", text:"네, 민선 님! 4개 구·12/20 이후 기준으로 다시 대조해서, 조건 밖 대기 건은 발표 전에 선정 전 취소로 정리하겠습니다. 43번지혼술바는 내일 20:00 2인 방문으로 체크리스트 9시에 올려요 ✍️"},
+      {who:"han",   time:"오후 5:14", text:"네, 민선 님! 11/30 월말 세무 마감과 한은 금통위 3.25% 반영 자금 체크 중입니다. 자금일보는 퇴근 전에 한 번 더 맞춰 두겠습니다 💼"},
+      {who:"daon",  time:"오후 5:15", text:"네, 민선 님! 투룸 이상 청약 오늘 0건 확인했고, 12/8 달러박스 알림도 대기 중입니다. 하트스캔 추적(유방 초음파·B형간염 접종)도 잊지 않고 챙길게요 🏠"},
+      {who:"mong",  time:"오후 5:16", text:"네 분 보고 모두 받았습니다. 정리 끝나는 대로 제가 한 번에 묶어서 보고드릴게요. 민선 님 퇴근길 편히 쉬세요! 필요한 일은 여기 태그해서 바로 시켜주세요 🌸"}
+    ],
+    lounge:[
+      {who:"daon",  time:"오전 8:12", text:"민선 님, 오늘 아침 기온 많이 떨어졌어요. 퇴근길에 목도리 하나 챙기세요 🧣"},
+      {who:"mong",  time:"오전 8:14", text:"내일은 더 춥대요. 43번지 갈 때도 따뜻하게 입고 가세요! 저는 몰래 핫팩 챙겨둘게요 🌸"},
+      {who:"me",    time:"오전 9:02", text:"ㅋㅋ 고마워요 챙길게요"},
+      {who:"sunny", time:"오전 9:20", text:"저는 내일 사진 잘 나오게 조명 팁 정리해 둘게요. 조명 어두운 바면 폰 플래시보다 화면 밝기를 올려서 찍는 게 예뻐요 📸"},
+      {who:"han",   time:"오후 5:20", text:"저는 마감이 있어서 조금만 더 있다 갑니다… 다들 야근 없이 퇴근하세요 ㅠㅠ"}
+    ]
+  };
+
+  var SEED_TASKS = [
+    {id:"t1", title:"43번지혼술바 을지로점 방문 · 블로그+클립", meta:"11/28(토) 20:00 · 2인 · 리뷰노트 #1526062", cat:"exp",  who:"sunny", due:"2026-11-28", done:false},
+    {id:"t2", title:"도우 신도림 방문 일정 조율",                 meta:"블로그+네이버 클립 · 구로구 · 8,000P",     cat:"exp",  who:"sunny", due:"2026-12-14", done:false},
+    {id:"t3", title:"낙원 홍대 방문 일정 조율",                   meta:"메인안주+주류 1병 · 리뷰 마감 12/8",       cat:"exp",  who:"sunny", due:"2026-12-08", done:false},
+    {id:"t4", title:"신사 진미골 발표 대기",                       meta:"12/8 발표 · 리뷰 마감 12/21",             cat:"exp",  who:"sunny", due:"2026-12-08", done:false},
+    {id:"t5", title:"11/30 월말 세무 마감 체크",                   meta:"원천세·법인세 중간예납 등",               cat:"fin",  who:"han",   due:"2026-11-30", done:false},
+    {id:"t6", title:"카카오뱅크 달러박스 외화 이전·출금",          meta:"12/14 마감 · 12/8 알림 예정",             cat:"fin",  who:"han",   due:"2026-12-14", done:false},
+    {id:"t7", title:"강남하트스캔 추적 관리",                       meta:"유방 초음파 · B형간염 예방접종 권장",     cat:"life", who:"daon",  due:null,         done:false}
+  ];
+
+  var SEED_MEMOS = [
+    {id:"m1", text:"2028-09-23 결혼 택일 1순위 웨딩홀 확인", done:false},
+    {id:"m2", text:"2027-02-06~08 히로시마 4인 여행 엔화 환전 방식 결정", done:false},
+    {id:"m3", text:"43번지혼술바 15초 세로 영상 촬영", done:false},
+    {id:"m4", text:"히로시마 호텔 자동결제 2027-01-28 · 무료취소 01-30 23:59", done:false},
+    {id:"m5", text:"12/2 43번지 리뷰 마감 전 사진 15장·영상 3개 확인", done:false},
+    {id:"m6", text:"11/30 원천세·법인세 중간예납 서류 마감", done:false}
+  ];
+
+  var CAT_INFO = {
+    exp:  {label:"체험단", cls:"exp",  who:"sunny"},
+    fin:  {label:"재무",   cls:"fin",  who:"han"},
+    life: {label:"생활",   cls:"life", who:"daon"}
+  };
+
+  /* ── 저장소 ─────────────────────────────── */
+  var KEY = "minseon.secretariat.v1";
+  var state = {room:"assembly", rooms:{}, tasks:[], memos:[], filter:"all"};
+
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+  function loadState(){
+    var saved = null;
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(raw) saved = JSON.parse(raw);
+    }catch(e){ saved = null; }
+
+    if(saved && typeof saved === "object"){
+      state.room = (saved.room && ROOM_INFO[saved.room]) ? saved.room : "assembly";
+      state.rooms = {
+        assembly: (saved.rooms && Array.isArray(saved.rooms.assembly)) ? saved.rooms.assembly : clone(SEED_ROOMS.assembly),
+        command:  (saved.rooms && Array.isArray(saved.rooms.command))  ? saved.rooms.command  : clone(SEED_ROOMS.command),
+        lounge:   (saved.rooms && Array.isArray(saved.rooms.lounge))   ? saved.rooms.lounge   : clone(SEED_ROOMS.lounge)
+      };
+      state.tasks = Array.isArray(saved.tasks) ? saved.tasks : clone(SEED_TASKS);
+      state.memos = Array.isArray(saved.memos) ? saved.memos : clone(SEED_MEMOS);
+      state.filter = saved.filter || "all";
+    }else{
+      state.rooms = clone(SEED_ROOMS);
+      state.tasks = clone(SEED_TASKS);
+      state.memos = clone(SEED_MEMOS);
+    }
+  }
+
+  var saveWarned = false;
+  function saveState(){
+    try{
+      localStorage.setItem(KEY, JSON.stringify({
+        rooms: state.rooms, tasks: state.tasks, memos: state.memos,
+        room: state.room, filter: state.filter
+      }));
+    }catch(e){
+      if(!saveWarned && typeof document !== "undefined"){
+        saveWarned = true;
+        toast("이 브라우저에서는 자동 저장이 제한돼요. 화면은 그대로 쓸 수 있어요!");
+      }
+    }
+  }
+
+  /* ── 공통 유틸 ──────────────────────────── */
+  function $(sel){ return document.querySelector(sel); }
+  function el(tag, cls, text){
+    var n = document.createElement(tag);
+    if(cls) n.className = cls;
+    if(text !== undefined && text !== null) n.textContent = text;
+    return n;
+  }
+  function nowTime(){
+    var d = new Date(), h = d.getHours(), m = d.getMinutes();
+    var ap = h < 12 ? "오전" : "오후";
+    var hh = h % 12; if(hh === 0) hh = 12;
+    return ap + " " + hh + ":" + String(m).padStart(2, "0");
+  }
+  function todayLabel(){
+    var d = new Date();
+    var w = ["일","월","화","수","목","금","토"][d.getDay()];
+    return d.getFullYear() + ". " + (d.getMonth() + 1) + ". " + d.getDate() + ". (" + w + ")";
+  }
+  function ddayOf(due){
+    if(!due) return {text:"일정 미정", soon:false};
+    var today = new Date(); today.setHours(0,0,0,0);
+    var target = new Date(due + "T00:00:00");
+    if(isNaN(target.getTime())) return {text:"일정 미정", soon:false};
+    var diff = Math.round((target - today) / 86400000);
+    if(diff === 0) return {text:"D-DAY", soon:true};
+    if(diff > 0) return {text:"D-" + diff, soon:diff <= 3};
+    return {text:"D+" + (-diff), soon:false};
+  }
+  function toast(msg){
+    var t = $("#toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toast._tm);
+    toast._tm = setTimeout(function(){ t.classList.remove("show"); }, 1700);
+  }
+
+  /* ── 회의실 ─────────────────────────────── */
+  var chatScroll, chatInput;
+
+  function renderRoom(){
+    var room = state.room;
+    $("#roomMeta").textContent = ROOM_INFO[room].icon + " " + ROOM_INFO[room].name + " · ON 5명";
+    Array.prototype.forEach.call(document.querySelectorAll(".subtab"), function(b){
+      var on = b.getAttribute("data-room") === room;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    chatScroll.textContent = "";
+    var list = state.rooms[room] || [];
+    list.forEach(function(m){ chatScroll.appendChild(messageNode(m)); });
+    chatScroll.scrollTop = chatScroll.scrollHeight;
+  }
+
+  function messageNode(m){
+    var p = PEOPLE[m.who] || PEOPLE.mong;
+    var wrap = el("div", "msg" + (m.who === "me" ? " me" : ""));
+
+    var av = el("div", "avatar " + p.av, p.emoji);
+    av.setAttribute("aria-hidden", "true");
+
+    var body = el("div", "body");
+    var who = el("div", "who");
+    who.appendChild(el("span", "nm", p.name));
+    if(m.who !== "me"){
+      who.appendChild(el("span", "rl", p.role));
+    }
+    who.appendChild(el("span", "tm", m.time || ""));
+    body.appendChild(who);
+
+    var bubble = el("div", "bubble");
+    bubble.textContent = m.text;
+    body.appendChild(bubble);
+
+    wrap.appendChild(av);
+    wrap.appendChild(body);
+    return wrap;
+  }
+
+  function pushMessage(room, msg){
+    if(!state.rooms[room]) state.rooms[room] = [];
+    state.rooms[room].push(msg);
+    saveState();
+    if(state.room === room) renderRoom();
+  }
+
+  function showTyping(who){
+    var p = PEOPLE[who] || PEOPLE.mong;
+    var wrap = el("div", "msg typing");
+    wrap.setAttribute("aria-label", p.name + " 답변 중");
+    var av = el("div", "avatar " + p.av, p.emoji);
+    av.setAttribute("aria-hidden", "true");
+    var body = el("div", "body");
+    var whoLine = el("div", "who");
+    whoLine.appendChild(el("span", "nm", p.name));
+    whoLine.appendChild(el("span", "rl", p.role));
+    whoLine.appendChild(el("span", "tm", "입력 중"));
+    body.appendChild(whoLine);
+    var bubble = el("div", "bubble");
+    bubble.appendChild(el("i"));
+    bubble.appendChild(el("i"));
+    bubble.appendChild(el("i"));
+    body.appendChild(bubble);
+    wrap.appendChild(av);
+    wrap.appendChild(body);
+    chatScroll.appendChild(wrap);
+    chatScroll.scrollTop = chatScroll.scrollHeight;
+  }
+
+  function hasAny(text, words){
+    for(var i = 0; i < words.length; i++){
+      if(text.indexOf(words[i]) !== -1) return true;
+    }
+    return false;
+  }
+  function pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+
+  var RULES = {
+    sunny:[
+      {k:["43번지"], r:[
+        "내일(11/28) 저녁 8시 방문 체크리스트, 오전 9시에 올려 두겠습니다. 사진 15장 이상·짧은 영상·15초 세로 클립까지 준비할게요!",
+        "43번지혼술바는 토요일 20:00 2인 방문으로 잡혀 있어요. 리뷰 마감이 12/2라 촬영분 정리도 바로 들어가겠습니다."
+      ]},
+      {k:["진미골"], r:[
+        "신사 진미골은 신청 완료했고, 12/8 발표·12/21 리뷰 마감으로 달력에 잡아 뒀습니다."
+      ]},
+      {k:["도우","낙원"], r:[
+        "도우 신도림과 낙원 홍대는 방문 날짜만 정해지면 바로 예약 잡고 체크리스트 올릴게요. 두 건 다 블로그+클립입니다!"
+      ]},
+      {k:["체험단","신청","당첨","응모","리뷰노트","무신사","쿠팡"], r:[
+        "관악·동작·서초·강남 4개 구, 요식업이나 물건, 12/20 이후 마감 조건부터 다시 대조하고 신청할게요. 조건 밖은 아예 넣지 않습니다!",
+        "대기 중인 건은 발표 전에 지역·업종·마감일을 한 번 더 확인해서, 조건에 안 맞는 건 선정 전에 정리하겠습니다.",
+        "리뷰노트·무신사·쿠팡 내역 오늘 안으로 한 번 더 훑어보고, 새로 뜬 후보는 조건 맞는 것만 골라 올릴게요."
+      ]},
+      {k:["블로그","써니로그","포스팅","리뷰","써줘","대필","클립","영상"], r:[
+        "사진 보내주시면 써니로그 대필부터 네이버 클립까지 한 번에 만들게요. 공정위 배너는 본문 맨 위에 두겠습니다!",
+        "한 문장씩 짧게 끊고 사진 흐름 살려서, 써니로그 문체 그대로 쓸게요. 사진만 주시면 됩니다 📸"
+      ]},
+      {k:["사진","촬영"], r:[
+        "사진은 음식 10장·매장 10장 정도로 넉넉히 남기면 좋아요. 15초 세로 영상도 같이 찍어 주시면 클립까지 바로 갑니다!"
+      ]}
+    ],
+    han:[
+      {k:["세무","원천세","법인세","마감","신고","결산"], r:[
+        "11/30 월말 세무 마감(원천세·법인세 중간예납) 일정부터 다시 확인해서 표로 정리해 드릴게요.",
+        "월말 마감 자료는 오늘 퇴근 전에 한 번 훑고, 빠진 증빙이 있으면 내일 아침에 먼저 말씀드리겠습니다."
+      ]},
+      {k:["환율","달러","외화","엔화","금리","금통위"], r:[
+        "환율은 오늘 종가 기준으로 다시 잡고, 외화 결제 건은 승인내역까지 맞춰 보겠습니다.",
+        "한은 금통위 3.25% 기준 반영해서 자금 계획 다시 계산해 둘게요. 환율 변동은 브리핑에 매일 넣습니다."
+      ]},
+      {k:["대시보드","자금일보","시재","KPI","자금"], r:[
+        "자금 대시보드는 일일자금시재·자금일보·1개년 추정 순서로 다듬고 있습니다. 대표님 보고용으로도 손색없게 준비할게요.",
+        "자금일보는 오늘 수치로 다시 맞춰 두고, 내일 아침 브리핑에 요약해서 올리겠습니다."
+      ]}
+    ],
+    daon:[
+      {k:["달러박스"], r:[
+        "카카오뱅크 달러박스는 12/14 마감이라 12/8에 알림 먼저 드릴게요. 외화 이전·출금 금액 정해주시면 그대로 실행할게요."
+      ]},
+      {k:["청약","투룸","임대","집","이사"], r:[
+        "투룸 이상만 보고 있습니다. 오늘도 0건이었고, 새 공고는 무페널티·신혼 요건부터 확인해서 알려드릴게요.",
+        "청약은 원룸·1.5룸이면 아무리 좋아도 빼고, 투룸 이상만 보증금·월세·관리비·전환 금액까지 정리해 올립니다."
+      ]},
+      {k:["건강","검진","병원","초음파","접종","몸","컨디션","하트스캔"], r:[
+        "하트스캔 추적 항목(유방 초음파·B형간염 접종·단핵구 경과관찰) 챙겨서 일정 잡아 둘게요. 진단은 의료진 몫으로 남기고요!",
+        "건강검진 추적은 미루지 않게 알림으로 잡아 둘게요. 유방 초음파랑 B형간염 접종이 우선입니다."
+      ]},
+      {k:["히로시마","여행","환전","일본","호텔","항공"], r:[
+        "히로시마는 2027-01-28 자동결제, 01-30 무료취소 기한만 남았어요. 엔화 환전 방식은 정해주시면 바로 실행할게요.",
+        "히로시마 4인 여행 준비는 항공·호텔 다 끝났고, 남은 건 환전 방식과 동선 정리입니다!"
+      ]},
+      {k:["결혼","웨딩","택일","사주"], r:[
+        "2028년 9월 결혼 준비, 택일 1순위 웨딩홀 확인부터 차근차근 정리해 둘게요.",
+        "결혼 준비는 급하지 않게, 하나씩 확인해서 여쭙겠습니다. 택일 1순위 웨딩홀부터 볼까요?"
+      ]}
+    ],
+    mong:[
+      {k:["브리핑","아침","날씨","7시"], r:[
+        "내일 아침 7시 모닝 브리핑에 반영해서 정확히 올리겠습니다. 날씨·환율·재무팀 5선까지 한 번에 정리할게요!",
+        "브리핑은 7시 정각에 맞춰 준비해 둘게요. 기온에 맞는 옷차림 추천도 같이 넣습니다."
+      ]},
+      {k:["일정","스케줄","캘린더","내일","주말","퇴근"], r:[
+        "일정 한 번에 정리해서 보기 좋게 올려 드릴게요. 내일 43번지 20:00도 잊지 않고 챙깁니다!",
+        "내일 일정은 오전 9시 체크리스트, 저녁 8시 43번지 방문으로 잡혀 있어요. 무리 없이 움직이게 짜 둘게요."
+      ]}
+    ]
+  };
+
+  var DEFAULTS = {
+    mong: [
+      "바로 실행하겠습니다! 결과는 정리해서 보고드릴게요.",
+      "확인했습니다, 민선 님. 제가 총괄해서 챙기고, 끝나면 바로 알려드릴게요.",
+      "네, 민선 님! 네 비서한테도 같이 전달해 두고 한 번에 모아 보고드리겠습니다."
+    ],
+    sunny: [
+      "체험단·리뷰·써니로그 쪽은 제가 맡아서 차곡차곡 정리해 둘게요.",
+      "신청·발표·마감 일정 한 번에 정리해서 보고드릴게요. 43번지 준비도 계속 챙깁니다!",
+      "네, 민선 님! 리뷰노트 조건 먼저 확인하고 신청부터 진행할게요."
+    ],
+    han: [
+      "재무·자금 쪽은 제가 숫자 맞춰서 정리해 두겠습니다.",
+      "자금일보와 세무 일정, 오늘 안으로 한 번 훑어보고 보고드릴게요.",
+      "네, 민선 님! 관련 자료 확인해서 바로 정리하겠습니다."
+    ],
+    daon: [
+      "청약·건강·여행 쪽은 제가 조용히 챙기고 있다가, 결정하실 것만 딱 골라서 여쭐게요.",
+      "네, 민선 님! 일정 잡아서 놓치지 않게 알림 걸어 두겠습니다.",
+      "확인했습니다. 청약 새 공고부터 다시 보고 정리해 둘게요."
+    ]
+  };
+
+  var GREETS = ["네, 민선 님! ", "바로 확인했습니다, 민선 님! ", "알겠습니다, 민선 님! ", "네, 민선 님, "];
+
+  function buildReply(who, text){
+    var rules = RULES[who] || [];
+    var body = null;
+    for(var i = 0; i < rules.length; i++){
+      if(hasAny(text, rules[i].k)){ body = pick(rules[i].r); break; }
+    }
+    if(!body) body = pick(DEFAULTS[who] || DEFAULTS.mong);
+    return pick(GREETS) + body;
+  }
+
+  function parseMentions(text){
+    var order = ["mong","sunny","han","daon"];
+    if(text.indexOf("@all") !== -1) return order.slice();
+    var map = [["@몽이","mong"],["@써니비서","sunny"],["@한결비서","han"],["@다온비서","daon"]];
+    var out = [];
+    map.forEach(function(pair){
+      if(text.indexOf(pair[0]) !== -1) out.push(pair[1]);
+    });
+    return out.length ? out : ["mong"];
+  }
+
+  function respond(userText, targets, room){
+    targets.forEach(function(who, idx){
+      setTimeout(function(){
+        if(state.room === room) showTyping(who);
+        setTimeout(function(){
+          pushMessage(room, {who:who, text:buildReply(who, userText), time:nowTime()});
+        }, 620);
+      }, 420 + idx * 900);
+    });
+  }
+
+  function sendMessage(){
+    var text = chatInput.value.trim();
+    if(!text) return;
+    var room = state.room;
+    pushMessage(room, {who:"me", text:text, time:nowTime()});
+    chatInput.value = "";
+    chatInput.style.height = "auto";
+    var targets = parseMentions(text);
+    respond(text, targets, room);
+    saveState();
+  }
+
+  /* ── 작업실 ─────────────────────────────── */
+  function renderTasks(){
+    var list = $("#taskList");
+    list.textContent = "";
+    var all = state.tasks;
+    var counts = {all:all.length, exp:0, fin:0, life:0};
+    all.forEach(function(t){ if(counts[t.cat] !== undefined) counts[t.cat]++; });
+
+    Array.prototype.forEach.call(document.querySelectorAll(".filter"), function(b){
+      var f = b.getAttribute("data-filter");
+      b.classList.toggle("active", state.filter === f);
+      var c = b.querySelector(".cnt");
+      if(c) c.textContent = counts[f] !== undefined ? counts[f] : 0;
+    });
+
+    var visible = all.filter(function(t){ return state.filter === "all" || t.cat === state.filter; });
+    if(!visible.length){
+      var empty = el("div", "empty", state.filter === "all"
+        ? "아직 작업이 없어요. 아래에서 새 작업을 추가해 보세요!"
+        : "이 분류에 표시할 작업이 없어요.");
+      empty.style.gridColumn = "1 / -1";
+      list.appendChild(empty);
+    }else{
+      visible.forEach(function(t){ list.appendChild(taskNode(t)); });
+    }
+
+    var done = all.filter(function(t){ return t.done; }).length;
+    var pct = all.length ? Math.round(done / all.length * 100) : 0;
+    $("#pgBar").style.width = pct + "%";
+    $("#pgText").textContent = "완료 " + done + " / " + all.length + " (" + pct + "%)";
+  }
+
+  function taskNode(t){
+    var cat = CAT_INFO[t.cat] || CAT_INFO.exp;
+    var dd = ddayOf(t.due);
+    var card = el("div", "task" + (t.done ? " done" : ""));
+
+    var check = el("button", "check", "✓");
+    check.type = "button";
+    check.setAttribute("aria-label", t.done ? "완료 취소" : "완료 처리");
+    check.setAttribute("aria-pressed", t.done ? "true" : "false");
+    check.addEventListener("click", function(){
+      t.done = !t.done;
+      saveState();
+      renderTasks();
+      renderTeam();
+      toast(t.done ? "완료로 표시했어요 ✓" : "다시 진행 중으로 돌렸어요");
+    });
+
+    var body = el("div", "t-body");
+    body.appendChild(el("div", "t-title", t.title));
+    if(t.meta) body.appendChild(el("div", "t-meta", t.meta));
+
+    var tags = el("div", "tags");
+    tags.appendChild(el("span", "tag " + cat.cls, cat.label));
+    tags.appendChild(el("span", "tag dday" + (dd.soon && !t.done ? " soon" : ""), dd.text));
+    tags.appendChild(el("span", "tag who", PEOPLE[t.who] ? PEOPLE[t.who].name : "몽이"));
+    body.appendChild(tags);
+
+    var del = el("button", "del", "×");
+    del.type = "button";
+    del.setAttribute("aria-label", "작업 삭제");
+    del.addEventListener("click", function(){
+      if(!window.confirm("이 작업을 삭제할까요?\n\n" + t.title)) return;
+      state.tasks = state.tasks.filter(function(x){ return x.id !== t.id; });
+      saveState();
+      renderTasks();
+      renderTeam();
+      toast("작업을 삭제했어요");
+    });
+
+    card.appendChild(check);
+    card.appendChild(body);
+    card.appendChild(del);
+    return card;
+  }
+
+  function addTask(){
+    var titleEl = $("#newTitle");
+    var title = titleEl.value.trim();
+    if(!title){
+      titleEl.focus();
+      toast("할 일을 먼저 적어주세요");
+      return;
+    }
+    var cat = $("#newCat").value;
+    var due = $("#newDue").value || null;
+    state.tasks.unshift({
+      id:"t" + Date.now(),
+      title:title,
+      meta: due ? "마감 " + due.slice(5).replace("-", "/") : "일정 미정",
+      cat:cat,
+      who:(CAT_INFO[cat] || CAT_INFO.exp).who,
+      due:due,
+      done:false
+    });
+    titleEl.value = "";
+    $("#newDue").value = "";
+    state.filter = "all";
+    saveState();
+    renderTasks();
+    renderTeam();
+    toast("새 작업을 추가했어요 📋");
+  }
+
+  /* ── 비서현황 ───────────────────────────── */
+  var TEAM = [
+    {who:"mong", desc:"전체 일정과 모닝 브리핑, 네 비서의 보고를 한곳에서 묶는 총괄 실장.", comment:"내일 7시 모닝 브리핑 준비 완료! 네 분 보고 모두 모아 한 번에 올릴게요."},
+    {who:"sunny", desc:"리뷰노트·무신사·쿠팡 신청과 써니로그 대필, 네이버 클립 제작까지.", comment:"43번지 체크리스트 내일 오전 9시, 진미골 발표는 12/8 대기 중입니다."},
+    {who:"han", desc:"대교씨엔에스·강원심층수 자금과 세무, 환율, KPI 자금 대시보드.", comment:"11/30 월말 마감 준비 중이고, 자금일보는 퇴근 전에 점검합니다."},
+    {who:"daon", desc:"투룸 이상 청약 점검, 건강검진 추적, 사주·결혼 준비, 히로시마 여행.", comment:"오늘 투룸 이상 청약 0건, 12/8 달러박스 알림 대기 중이에요."}
+  ];
+
+  function renderTeam(){
+    var grid = $("#teamGrid");
+    if(!grid) return;
+    grid.textContent = "";
+    var openAll = state.tasks.filter(function(t){ return !t.done; }).length;
+    var doneAll = state.tasks.filter(function(t){ return t.done; }).length;
+
+    TEAM.forEach(function(m){
+      var p = PEOPLE[m.who];
+      var open, done;
+      if(m.who === "mong"){
+        open = openAll; done = doneAll;
+      }else{
+        open = state.tasks.filter(function(t){ return t.who === m.who && !t.done; }).length;
+        done = state.tasks.filter(function(t){ return t.who === m.who && t.done; }).length;
+      }
+      var card = el("div", "member");
+      var head = el("div", "m-head");
+      var av = el("div", "m-avatar " + p.av, p.emoji);
+      av.setAttribute("aria-hidden", "true");
+      var id = el("div", "m-id");
+      id.appendChild(el("div", "m-name", p.name));
+      id.appendChild(el("div", "m-role", p.role));
+      var st = el("span", "state " + (open > 0 ? "on" : "off"), open > 0 ? "활성" : "대기");
+      head.appendChild(av);
+      head.appendChild(id);
+      head.appendChild(st);
+
+      var desc = el("div", "m-desc", m.desc);
+
+      var stats = el("div", "m-stats");
+      var s1 = el("div", "stat");
+      s1.appendChild(el("b", null, String(open)));
+      s1.appendChild(el("span", null, m.who === "mong" ? "총괄 진행" : "처리 중"));
+      var s2 = el("div", "stat");
+      s2.appendChild(el("b", null, String(done)));
+      s2.appendChild(el("span", null, "완료"));
+      stats.appendChild(s1);
+      stats.appendChild(s2);
+
+      var cm = el("div", "m-comment", m.comment);
+
+      card.appendChild(head);
+      card.appendChild(desc);
+      card.appendChild(stats);
+      card.appendChild(cm);
+      grid.appendChild(card);
+    });
+  }
+
+  /* ── 메모 ───────────────────────────────── */
+  function renderMemos(){
+    var list = $("#memoList");
+    list.textContent = "";
+    if(!state.memos.length){
+      var empty = el("div", "empty", "메모가 없어요. 위에서 첫 메모를 남겨 보세요!");
+      empty.style.gridColumn = "1 / -1";
+      list.appendChild(empty);
+    }
+    state.memos.forEach(function(m){
+      var item = el("div", "memo" + (m.done ? " done" : ""));
+      var check = el("button", "check", "✓");
+      check.type = "button";
+      check.setAttribute("aria-label", m.done ? "체크 해제" : "체크");
+      check.setAttribute("aria-pressed", m.done ? "true" : "false");
+      check.addEventListener("click", function(){
+        m.done = !m.done;
+        saveState();
+        renderMemos();
+      });
+      var text = el("div", "mt");
+      text.appendChild(document.createTextNode(m.text));
+      var del = el("button", "del", "×");
+      del.type = "button";
+      del.setAttribute("aria-label", "메모 삭제");
+      del.style.position = "static";
+      del.addEventListener("click", function(){
+        if(!window.confirm("이 메모를 삭제할까요?\n\n" + m.text)) return;
+        state.memos = state.memos.filter(function(x){ return x !== m; });
+        saveState();
+        renderMemos();
+        toast("메모를 삭제했어요");
+      });
+      item.appendChild(check);
+      item.appendChild(text);
+      item.appendChild(del);
+      list.appendChild(item);
+    });
+    var left = state.memos.filter(function(m){ return !m.done; }).length;
+    $("#memoCount").textContent = "메모 " + state.memos.length + "개 · 남은 일 " + left + "개";
+  }
+
+  function addMemo(){
+    var input = $("#memoInput");
+    var text = input.value.trim();
+    if(!text){ input.focus(); return; }
+    state.memos.unshift({id:"m" + Date.now(), text:text, done:false});
+    input.value = "";
+    saveState();
+    renderMemos();
+    toast("메모를 저장했어요 📝");
+  }
+
+  /* ── 탭 전환 ────────────────────────────── */
+  function switchTab(name){
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(b){
+      var on = b.getAttribute("data-tab") === name;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".panel"), function(p){
+      p.classList.toggle("active", p.id === "panel-" + name);
+    });
+    if(name === "work") renderTasks();
+    if(name === "team") renderTeam();
+    if(name === "memo") renderMemos();
+    if(name === "meeting"){
+      chatScroll.scrollTop = chatScroll.scrollHeight;
+    }
+  }
+
+  /* ── 초기화 ─────────────────────────────── */
+  function init(){
+    chatScroll = $("#chatScroll");
+    chatInput = $("#chatInput");
+    $("#headDate").textContent = todayLabel();
+
+    loadState();
+
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(b){
+      b.addEventListener("click", function(){ switchTab(b.getAttribute("data-tab")); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".subtab"), function(b){
+      b.addEventListener("click", function(){
+        state.room = b.getAttribute("data-room");
+        saveState();
+        renderRoom();
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".chip"), function(b){
+      b.addEventListener("click", function(){
+        var tag = b.getAttribute("data-mention") + " ";
+        var val = chatInput.value;
+        var focused = document.activeElement === chatInput;
+        if(!focused || val === ""){
+          chatInput.value = (val ? val.replace(/\s+$/, "") + " " : "") + tag;
+        }else{
+          var s0 = chatInput.selectionStart || 0;
+          var s1 = chatInput.selectionEnd || s0;
+          var pre = val.slice(0, s0);
+          var post = val.slice(s1);
+          if(pre && !/\s$/.test(pre)) pre += " ";
+          chatInput.value = pre + tag + post;
+        }
+        chatInput.focus();
+        var pos = chatInput.value.length;
+        try{ chatInput.setSelectionRange(pos, pos); }catch(e){}
+        autoGrow();
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".filter"), function(b){
+      b.addEventListener("click", function(){
+        state.filter = b.getAttribute("data-filter");
+        saveState();
+        renderTasks();
+      });
+    });
+
+    $("#sendBtn").addEventListener("click", sendMessage);
+    chatInput.addEventListener("keydown", function(e){
+      if(e.key === "Enter" && !e.shiftKey && !e.isComposing){
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    chatInput.addEventListener("input", autoGrow);
+
+    $("#addTaskBtn").addEventListener("click", addTask);
+    $("#newTitle").addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); addTask(); }
+    });
+
+    $("#addMemoBtn").addEventListener("click", addMemo);
+    $("#memoInput").addEventListener("keydown", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); addMemo(); }
+    });
+
+    renderRoom();
+    renderTasks();
+    renderTeam();
+    renderMemos();
+  }
+
+  function autoGrow(){
+    chatInput.style.height = "auto";
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 110) + "px";
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", init);
+  }else{
+    init();
+  }
+})();
+</script>
+</body>
+</html>
