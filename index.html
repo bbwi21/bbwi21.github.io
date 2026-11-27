@@ -483,9 +483,9 @@
 
   /* 캐릭터 상세 카드 */
   .agent-pop{
-    position:absolute;left:50%;bottom:14px;z-index:240;
-    transform:translate(-50%,10px);
-    width:min(330px,calc(100% - 26px));
+    position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:95;
+    transform:translate(-50%,18px);
+    width:min(352px,calc(100vw - 26px));
     background:rgba(255,255,255,.97);border:1px solid #fbd6e6;border-radius:20px;
     box-shadow:0 20px 44px rgba(120,60,90,.26);
     padding:12px 13px 12px;opacity:0;visibility:hidden;pointer-events:none;transition:.2s;
@@ -749,7 +749,6 @@
           <button class="map-label" type="button" data-room="command" style="left:55%;top:30%" aria-label="지휘실로 이동"><i aria-hidden="true"></i>지휘실</button>
           <button class="map-label" type="button" data-room="work" style="left:65%;top:61%" aria-label="업무존으로 이동"><i aria-hidden="true"></i>업무존</button>
           <button class="map-label" type="button" data-room="lounge" style="left:76%;top:69%" aria-label="라운지로 이동"><i aria-hidden="true"></i>라운지</button>
-          <div class="agent-pop" id="agentPop" role="dialog" aria-label="담당자 정보"></div>
         </div>
         <div class="office-foot">
           <span class="office-foot-note">🪄 클레이 3D 오피스 · 공간이나 캐릭터를 눌러 보세요</span>
@@ -878,6 +877,7 @@
   </div>
 </div>
 
+  <div class="agent-pop" id="agentPop" role="dialog" aria-label="담당자 정보"></div>
 <!-- Firebase 실시간 DB (compat SDK) -->
 <script src="https://www.gstatic.com/firebasejs/13.4.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/13.4.0/firebase-database-compat.js"></script>
