@@ -516,6 +516,92 @@
   .office-cta:hover{background:#fff2f8;border-color:#f4a0c6;transform:translateY(-1px)}
   .office-cta:active{transform:translateY(0)}
 
+  /* ── 비서들끼리 대화 로그 ───────────────── */
+  .chatter-card{
+    margin-top:12px;max-width:100%;
+    border:1px solid var(--line);border-radius:24px;overflow:hidden;
+    background:linear-gradient(180deg,#fffdfe,#fff5fa);
+    box-shadow:0 12px 30px rgba(244,114,182,.12),inset 0 0 0 1px rgba(255,255,255,.7);
+  }
+  .chatter-head{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;
+    padding:12px 13px 0;
+  }
+  .chatter-title{
+    display:inline-flex;align-items:center;gap:7px;min-width:0;
+    font-size:13px;font-weight:900;color:#3f2433;letter-spacing:-.02em;
+  }
+  .chatter-live{
+    display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
+    font-size:9.5px;font-weight:800;color:#2f8a63;
+    background:#e9f9f1;border:1px solid #c8f0dc;border-radius:999px;padding:3px 8px;
+  }
+  .chatter-live i{width:6px;height:6px;border-radius:50%;background:#3ecf8e;animation:pulse 2.2s infinite}
+  .chatter-tools{display:inline-flex;gap:5px;flex-wrap:wrap}
+  .chatter-btn{
+    border:1px solid #f7c6dc;background:#fff;color:#c2477f;
+    font-size:10px;font-weight:800;padding:6px 10px;border-radius:999px;
+    cursor:pointer;white-space:nowrap;transition:.18s;-webkit-tap-highlight-color:transparent;
+    box-shadow:0 3px 10px rgba(244,114,182,.12);
+  }
+  .chatter-btn:hover{background:#fff2f8;border-color:#f4a0c6}
+  .chatter-btn:active{transform:scale(.97)}
+  .chatter-btn[disabled]{opacity:.55;cursor:progress}
+  .chatter-sub{margin:7px 13px 0;font-size:10.5px;font-weight:600;color:#a9808f;line-height:1.55}
+  .chatter-list{
+    display:flex;flex-direction:column;gap:7px;padding:11px 12px 6px;
+    max-height:340px;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+  .chatter-list .empty{padding:16px 10px;font-size:11px}
+  .chatter-row{
+    display:flex;gap:8px;align-items:flex-start;
+    background:#fff;border:1px solid #fde9f2;border-radius:16px;padding:9px 10px;
+    box-shadow:0 3px 10px rgba(196,86,140,.05);
+  }
+  .chatter-row.fresh{animation:chatterIn .52s cubic-bezier(.3,1.25,.55,1)}
+  @keyframes chatterIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:translateY(0)}}
+  .chatter-av{
+    width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:grid;place-items:center;
+    font-size:12px;background:#ffeef5;border:1px solid #fbdcea;
+  }
+  .chatter-body{min-width:0;flex:1}
+  .chatter-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;font-weight:700;color:#a9808f}
+  .chatter-meta b{font-size:10.5px;font-weight:900;color:#5a2b3f}
+  .chatter-meta .tp{
+    font-style:normal;font-size:9px;font-weight:800;color:#c2477f;
+    background:#fff2f8;border:1px solid #fbdcea;border-radius:999px;padding:1px 6px;
+  }
+  .chatter-text{margin:4px 0 0;font-size:11.5px;line-height:1.62;color:#5d3b4c;overflow-wrap:anywhere}
+  .chatter-more{
+    margin:2px auto 0;border:1px dashed #f4a8c9;background:#fff;color:#a8396f;
+    font-size:10px;font-weight:800;padding:6px 14px;border-radius:999px;cursor:pointer;font-family:inherit;
+  }
+  .chatter-more:hover{background:#fff4f9}
+  .chatter-foot{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:9px 13px 11px;font-size:9.5px;font-weight:700;color:#a9808f;
+  }
+  .room-link{
+    display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 11px;border-radius:999px;
+    border:1px solid #f7c6dc;background:#fff;color:#c2477f;font-size:10.5px;font-weight:800;
+    cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(244,114,182,.12);
+  }
+  .room-link:hover{background:#fff2f8;border-color:#f4a0c6}
+
+  /* 모바일에서 맵과 배지가 화면 밖으로 잘리지 않게 */
+  html,body{max-width:100%;overflow-x:hidden}
+  .office-card,.office-stage,.office-img{max-width:100%}
+  .office-stage .map-label{max-width:calc(100% - 12px)}
+
+  @media(max-width:560px){
+    .chatter-head{padding:11px 11px 0}
+    .chatter-sub{margin:6px 11px 0}
+    .chatter-list{max-height:300px;padding:10px 10px 6px}
+    .chatter-foot{padding:8px 11px 10px}
+    .office-stage .map-label.room[data-room="assembly"]{left:24% !important}
+    .office-stage .map-label.room[data-room="lounge"]{left:78% !important}
+  }
+
   .empty{
     text-align:center;font-size:12px;color:#a9808f;
     padding:26px 10px;background:#fffafc;border:1px dashed #f9d3e4;border-radius:16px;line-height:1.7;
@@ -727,7 +813,7 @@
 
       <div class="office-card">
         <div class="office-stage" id="officeStage">
-          <img class="office-img" id="officeImg" src="./office-map-v4.png?v=17" alt="민선 님 비서실 3D 클레이 오피스 — 다섯 비서가 각자 의자에 앉아 근무 중" draggable="false">
+          <img class="office-img" id="officeImg" src="./office-map-v5.png?v=18" alt="민선 님 비서실 3D 클레이 오피스 — 다섯 비서가 각자 자리에서 노트북 화면을 보며 근무 중" draggable="false">
           <div class="seat-layer" id="seatLayer">
             <button class="seat-hit" type="button" data-agent="mong" style="left:49.4%;top:23%;width:9.4%;height:14.5%" aria-label="몽이 자세히 보기"></button>
             <button class="seat-hit" type="button" data-agent="sunny" style="left:31.8%;top:42%;width:10%;height:13.5%" aria-label="써니 비서 자세히 보기"></button>
@@ -753,6 +839,23 @@
           <button class="office-cta" id="officeCta" type="button">💬 지휘실에서 지시하기</button>
         </div>
       </div>
+
+      <!-- 💬 비서들끼리 대화 로그 -->
+      <section class="chatter-card" id="chatterCard" aria-labelledby="chatterTitle">
+        <div class="chatter-head">
+          <div class="chatter-title" id="chatterTitle">
+            <span aria-hidden="true">💬</span>비서들끼리 대화 로그
+            <span class="chatter-live"><i aria-hidden="true"></i>자동 진행</span>
+          </div>
+          <div class="chatter-tools">
+            <button class="chatter-btn" id="chatterNext" type="button">🪄 비서끼리 한마디</button>
+            <button class="chatter-btn" id="chatterRefresh" type="button">🔄 대화 새로고침</button>
+          </div>
+        </div>
+        <p class="chatter-sub">몽이·써니·한결·다온·별하가 서로 업무를 챙기며 주고받은 대화예요. 새 대화가 위로 쌓여요.</p>
+        <div class="chatter-list" id="chatterList" role="log" aria-live="polite" aria-label="비서들끼리 대화"></div>
+        <div class="chatter-foot" id="chatterFoot"></div>
+      </section>
     </section>
 
     <!-- 회의실 -->
@@ -764,6 +867,7 @@
           <button class="subtab" data-room="lounge" aria-pressed="false">☕ 라운지</button>
         </div>
         <div class="room-meta" id="roomMeta">🏛️ 대회의실 · ON 6명</div>
+        <button class="room-link" id="meetingChatterBtn" type="button">💬 비서들끼리 대화</button>
       </div>
 
       <div class="chat-wrap">
@@ -953,7 +1057,7 @@
 
   /* ── 저장소 ─────────────────────────────── */
   var KEY = "minseon.secretariat.v1";
-  var state = {room:"assembly", rooms:{}, tasks:[], memos:[], filter:"all", motionOn:true};
+  var state = {room:"assembly", rooms:{}, tasks:[], memos:[], chatter:[], filter:"all", motionOn:true};
 
   function clone(o){ return JSON.parse(JSON.stringify(o)); }
 
@@ -973,12 +1077,14 @@
       };
       state.tasks = Array.isArray(saved.tasks) ? saved.tasks : clone(SEED_TASKS);
       state.memos = Array.isArray(saved.memos) ? saved.memos : clone(SEED_MEMOS);
+      state.chatter = Array.isArray(saved.chatter) ? chatterArray(saved.chatter) : seededChatter();
       state.filter = saved.filter || "all";
       state.motionOn = saved.motionOn === false ? false : true;
     }else{
       state.rooms = clone(SEED_ROOMS);
       state.tasks = clone(SEED_TASKS);
       state.memos = clone(SEED_MEMOS);
+      state.chatter = seededChatter();
     }
   }
 
@@ -986,7 +1092,7 @@
   function saveState(){
     try{
       localStorage.setItem(KEY, JSON.stringify({
-        rooms: state.rooms, tasks: state.tasks, memos: state.memos,
+        rooms: state.rooms, tasks: state.tasks, memos: state.memos, chatter: state.chatter,
         room: state.room, filter: state.filter, motionOn: state.motionOn !== false
       }));
     }catch(e){
@@ -1039,7 +1145,7 @@
   }
 
   function seedPayload(){
-    var out = {rooms:{}, tasks:{}, memos:{}};
+    var out = {rooms:{}, tasks:{}, memos:{}, chatter:{}};
     Object.keys(SEED_ROOMS).forEach(function(room){
       var bag = {};
       SEED_ROOMS[room].forEach(function(m, i){
@@ -1053,6 +1159,10 @@
     });
     SEED_MEMOS.forEach(function(m, i){
       out.memos[m.id] = {text:m.text, done:!!m.done, ord:(SEED_MEMOS.length - i) * 1000};
+    });
+    SEED_CHATTER.forEach(function(c, i){
+      var ts = chatterSeedTs(c.at[0], c.at[1]);
+      out.chatter["sc" + (i + 1)] = {who:c.who, text:c.text, topic:c.topic, ts:ts, time:timeLabel(ts)};
     });
     return out;
   }
@@ -1126,6 +1236,7 @@
       root.child("rooms").on("value", applyRooms);
       root.child("tasks").on("value", applyTasks);
       root.child("memos").on("value", applyMemos);
+      root.child("chatter").on("value", applyChatter);
       dataReady = true;
       if(dbLive) setSync(true, "실시간 DB 연결");
     }).catch(function(){
@@ -2659,6 +2770,359 @@
     goOfficeRoom(room);
   }
 
+  /* ── 💬 비서들끼리 대화 로그 ─────────────── */
+  var CHATTER_MAX   = 160;   /* 저장해 두는 최대 건수 */
+  var CHATTER_SHOW  = 10;    /* 처음 보여줄 건수 */
+  var CHATTER_EVERY = 120;   /* 자동 대화 간격(초) */
+  var chatterShown  = CHATTER_SHOW;
+  var chatterBusy   = false;
+  var chatterPoolIdx = 0;
+  var chatterTimer  = null;
+
+  var CHATTER_VOICE = {
+    mong:  "총괄 실장. 밝고 다정한 존댓말. 다섯 사람의 일을 묶어 정리하고 다음에 할 일을 제안합니다.",
+    sunny: "체험단·블로그 담당. 밝고 꼼꼼한 말투. 마감일과 사진 장수를 숫자로 집어 말합니다.",
+    han:   "재무·자금 담당. 차분한 실무 톤. 숫자와 일정을 먼저 말하고 승인 원칙을 지킵니다.",
+    daon:  "청약·생활 케어 담당. 따뜻하고 세심한 말투. 민선 님 컨디션과 일정을 먼저 챙깁니다.",
+    byul:  "사주·명리 담당. 차분한 존댓말. 단정하지 않고 '~로 읽힙니다'처럼 여지를 둡니다."
+  };
+
+  /* 처음부터 쌓여 있는 대화 6건 — 실제 민선 님 맥락 */
+  var SEED_CHATTER = [
+    {who:"mong",  topic:"비서실",   at:[12,5],
+     text:"오늘은 토요일인데 다들 자리 지키고 있네요 🌸 저녁 43번지혼술바 준비부터 한 번 맞춰 볼까요?"},
+    {who:"sunny", topic:"43번지혼술바", at:[12,7],
+     text:"네! 을지로점 오늘 20:00 2인 방문으로 확정이고, 체크리스트는 오전에 올려 뒀어요. 사진 15장·짧은 영상·15초 세로 클립까지 챙깁니다 ✍️"},
+    {who:"han",   topic:"세무·환율", at:[12,12],
+     text:"11/30 월말 세무 마감 서류 오늘 한 번 더 확인했는데 빠진 건 없습니다. 환율은 월요일 아침에 다시 잡아 브리핑에 넣을게요 💼"},
+    {who:"daon",  topic:"청약 점검", at:[12,16],
+     text:"투룸 이상 청약은 오늘 0건이었어요. 원룸·1.5룸은 빼고, 무페널티 조건만 추려 월요일에 다시 훑겠습니다 🏠"},
+    {who:"byul",  topic:"결혼·택일", at:[12,21],
+     text:"결혼 택일은 2028-09-23 辛亥日 1순위 표 그대로 두고, 웨딩홀 후보만 비교해 두면 좋아요. 12월 길일도 몇 개 더 뽑아 둘게요 🔮"},
+    {who:"mong",  topic:"비서실",   at:[12,26],
+     text:"정리 감사합니다. 다섯 파트 모두 오늘 준비 완료로 두고, 새 소식은 여기 계속 남길게요. 민선 님 오시면 제가 한 번에 보고드릴게요 🌸"}
+  ];
+
+  /* Gemini가 없거나 실패해도 이어지는 준비된 대화 */
+  var CHATTER_POOL = [
+    {topic:"43번지혼술바", lines:[
+      {who:"sunny", text:"43번지혼술바 체크리스트 다시 열어 봤어요. 사진 15장·짧은 영상·15초 세로 클립, 촬영 목록까지 준비됐습니다 ✍️"},
+      {who:"daon",  text:"오늘 저녁 기온이 많이 떨어져요. 가실 때 목도리랑 핫팩 챙기시라고 제가 알림 걸어 둘게요 🧣"},
+      {who:"han",   text:"식대 영수증은 리뷰 마감 때 같이 정리해 두면 좋겠습니다. 결제 건은 제가 따로 메모해 둘게요 💼"}
+    ]},
+    {topic:"세무·환율", lines:[
+      {who:"han",   text:"11/30 원천세·법인세 중간예납 서류는 오늘 기준으로 다 맞았습니다. 월요일 아침에 한 번만 더 확인하면 됩니다 💼"},
+      {who:"mong",  text:"좋아요. 그 확인 결과는 월요일 모닝 브리핑에 넣어 주세요. 민선 님이 출근하자마자 보실 거예요 🌸"},
+      {who:"han",   text:"네. 환율은 9시 기준으로 다시 잡고 외화 결제 승인내역까지 붙여서 정리하겠습니다."}
+    ]},
+    {topic:"청약 점검", lines:[
+      {who:"daon",  text:"투룸 이상 청약 오늘도 0건이에요. 원룸·1.5룸은 아예 빼고 봤습니다 🏠"},
+      {who:"mong",  text:"무페널티 조건인지도 꼭 같이 봐 주세요. 그 조건 때문에 민선 님이 신청 안 하신 공고도 있었잖아요."},
+      {who:"daon",  text:"네, 당첨 후 미계약 시 청약 기회가 제한되는 공고는 신청 전에 먼저 말씀드릴게요. 월요일에 다시 훑겠습니다."}
+    ]},
+    {topic:"결혼·택일", lines:[
+      {who:"byul",  text:"2028-09-23 辛亥日을 1순위로 두고 9/16 甲辰·9/17 乙巳를 2·3순위로 정리해 뒀어요 🔮"},
+      {who:"mong",  text:"웨딩홀 후보가 정해지면 그쪽 일정과 겹치는지 제가 바로 대조해 볼게요."},
+      {who:"byul",  text:"네. 9/9 묘유충, 9/30 자오충은 피하자고만 말씀드리고, 결정은 두 분이 하시면 됩니다."}
+    ]},
+    {topic:"비서실 단장", lines:[
+      {who:"mong",  text:"오피스 맵에 다온·별하 자리 노트북 방향까지 맞췄어요. 이제 다들 화면 보고 일하는 모습이에요 🌸"},
+      {who:"sunny", text:"보니까 진짜 사무실 같아요! 제 책상엔 43번지 사진 폴터 열어 두고 싶네요 📸"},
+      {who:"daon",  text:"저는 청약 공고 탭 열어 두는 걸로 할게요. 지나가시다 한 번씩 봐 주세요 🏠"}
+    ]},
+    {topic:"건강·컨디션", lines:[
+      {who:"daon",  text:"하트스캔 추적 항목 중에 유방 초음파랑 B형간염 예방접종이 아직 안 잡혀 있어요. 이번 주에 일정 잡아 둘까요? 🏠"},
+      {who:"mong",  text:"네, 바쁘셔서 미루지 않게 제가 토요일 오전 후보로 두 개만 추려 둘게요."},
+      {who:"byul",  text:"검사일은 흥이 있는 날보다 맑은 날이 마음 편하다고들 해요. 후보 날짜 나오면 같이 봐 드릴게요 🔮"}
+    ]},
+    {topic:"히로시마 여행", lines:[
+      {who:"daon",  text:"히로시마는 2027-01-28 자동결제, 01-30 무료취소 기한만 남았어요. 그 전에 엔화 환전 방식만 정하면 됩니다 🏠"},
+      {who:"han",   text:"환전은 은행 창구보다 카드·트래블월렛 비교표를 만들어 두는 게 나을 것 같아요. 금액대별로 정리해 볼게요 💼"},
+      {who:"mong",  text:"좋아요. 4인 경비라 나눠 쓰는 부분도 있을 테니 정리되면 한 장으로 보고드릴게요 🌸"}
+    ]},
+    {topic:"체험단 정리", lines:[
+      {who:"sunny", text:"관악·동작·서초·강남 4개 구, 요식업, 12/20 이후 조건으로 대기 건 다시 대조했어요. 조건 밖은 두 건뿐입니다 ✍️"},
+      {who:"mong",  text:"그 두 건은 발표 전에 정리해 두세요. 조건이 안 맞는 건 신청 자체를 안 하는 게 맞아요."},
+      {who:"sunny", text:"네, 선정 전 취소로 처리하고 이유도 적어 두겠습니다."}
+    ]},
+    {topic:"일일 자금", lines:[
+      {who:"han",   text:"오늘 자금일보 마감했어요. 계좌 잔액 편차는 없고, 다음 주 화요일 이체 건만 확인하면 됩니다 💼"},
+      {who:"mong",  text:"이체는 민선 님 승인 받고 움직이는 거 일지 마세요. 금액과 일정만 정리해 두세요."},
+      {who:"han",   text:"그럼요. 승인 없이는 아무것도 실행하지 않습니다."}
+    ]},
+    {topic:"주말 정리", lines:[
+      {who:"mong",  text:"토요일인데 다들 붙어 있어서 고마워요. 오후엔 조용할 테니 밀린 정리나 하죠 🌸"},
+      {who:"byul",  text:"저는 12월 길일 후보 뽑아 두고 있을게요. 결혼 준비는 서두르지 않아도 됩니다 🔮"},
+      {who:"sunny", text:"저는 써니로그 초안 한 편만 다듬어 둘게요. 사진 주시면 바로 붙입니다 ✍️"}
+    ]},
+    {topic:"달러박스", lines:[
+      {who:"han",   text:"달러박스 12/14 마감 건, 12/8에 알림 먼저 드리기로 했습니다. 금액은 아직 정해지지 않았어요 💼"},
+      {who:"daon",  text:"제가 12/8 아침 알림에 같이 넣어 둘게요. 외화 이전인지 출금인지만 그때 여쭤보면 됩니다 🏠"}
+    ]},
+    {topic:"블로그·리뷰", lines:[
+      {who:"sunny", text:"43번지 리뷰는 12/2 마감이에요. 사진 15장만 확보되면 초안은 하루면 됩니다 ✍️"},
+      {who:"mong",  text:"공정위 배너는 본문 맨 위에 넣는 거 일지 말고요."},
+      {who:"sunny", text:"네, 늘 맨 위에 넣습니다. 이번엔 15초 클립도 같이 올릴게요."}
+    ]}
+  ];
+
+  function chatterSeedTs(h, m){
+    var d = new Date();
+    d.setHours(h, m, 0, 0);
+    return d.getTime();
+  }
+  function timeLabel(ts){
+    var d = new Date(ts);
+    var h = d.getHours(), m = d.getMinutes();
+    var ap = h < 12 ? "오전" : "오후";
+    var hh = h % 12; if(hh === 0) hh = 12;
+    return ap + " " + hh + ":" + String(m).padStart(2, "0");
+  }
+  function seededChatter(){
+    return SEED_CHATTER.map(function(c, i){
+      var ts = chatterSeedTs(c.at[0], c.at[1]);
+      return {id:"sc" + (i + 1), who:c.who, text:c.text, topic:c.topic, ts:ts, time:timeLabel(ts)};
+    });
+  }
+  /* localStorage 배열·DB 객체 둘 다 받습니다 */
+  function chatterArray(bag){
+    var list = [];
+    if(!bag || typeof bag !== "object") return list;
+    if(Array.isArray(bag)){
+      bag.forEach(function(c){
+        if(!c || typeof c !== "object" || !c.text) return;
+        var ts0 = (typeof c.ts === "number") ? c.ts : 0;
+        list.push({id:c.id || newId("ch"), who:PEOPLE[c.who] ? c.who : "mong", text:String(c.text),
+                   topic:c.topic || "", ts:ts0, time:c.time || (ts0 ? timeLabel(ts0) : "")});
+      });
+      return list;
+    }
+    Object.keys(bag).forEach(function(k){
+      var c = bag[k];
+      if(!c || typeof c !== "object" || !c.text) return;
+      var ts = (typeof c.ts === "number") ? c.ts : 0;
+      list.push({id:k, who:PEOPLE[c.who] ? c.who : "mong", text:String(c.text),
+                 topic:c.topic || "", ts:ts, time:c.time || (ts ? timeLabel(ts) : "")});
+    });
+    return list;
+  }
+  function sortedChatter(list){
+    return list.slice().sort(function(a, b){ return (b.ts - a.ts) || (a.id < b.id ? 1 : -1); });
+  }
+
+  function pushChatter(item){
+    if(!item || !item.text) return;
+    var it = {
+      id: item.id || newId("ch"),
+      who: PEOPLE[item.who] ? item.who : "mong",
+      text: String(item.text).slice(0, 300),
+      topic: String(item.topic || "").slice(0, 16),
+      ts: Date.now(),
+      time: nowTime()
+    };
+    state.chatter.push(it);
+    if(state.chatter.length > CHATTER_MAX) state.chatter = sortedChatter(state.chatter).slice(0, CHATTER_MAX);
+    saveState();
+    dbPut("chatter/" + it.id, {who:it.who, text:it.text, topic:it.topic, ts:it.ts, time:it.time});
+    renderChatter(it.id);
+  }
+
+  function renderChatter(freshId){
+    var list = document.getElementById("chatterList");
+    if(!list) return;
+    var all = sortedChatter(state.chatter || []);
+    var show = all.slice(0, Math.max(CHATTER_SHOW, chatterShown));
+    list.textContent = "";
+    if(!all.length){
+      list.appendChild(el("div", "empty", "아직 비서들끼리 나눈 대화가 없어요. 위의 '비서끼리 한마디'를 눌러 보세요!"));
+    }
+    show.forEach(function(c){
+      var p = PEOPLE[c.who] || PEOPLE.mong;
+      var row = el("div", "chatter-row" + (freshId && c.id === freshId ? " fresh" : ""));
+      var av = el("span", "chatter-av", p.emoji);
+      av.setAttribute("aria-hidden", "true");
+      var body = el("div", "chatter-body");
+      var meta = el("div", "chatter-meta");
+      meta.appendChild(el("b", null, p.name));
+      meta.appendChild(el("span", null, c.time || ""));
+      if(c.topic) meta.appendChild(el("em", "tp", c.topic));
+      body.appendChild(meta);
+      body.appendChild(el("p", "chatter-text", c.text));
+      row.appendChild(av);
+      row.appendChild(body);
+      list.appendChild(row);
+    });
+    if(all.length > show.length){
+      var more = el("button", "chatter-more", "이전 대화 더 보기 (" + show.length + "/" + all.length + ")");
+      more.type = "button";
+      more.addEventListener("click", function(){ chatterShown += 8; renderChatter(); });
+      list.appendChild(more);
+    }
+    list.scrollTop = 0;
+    var foot = document.getElementById("chatterFoot");
+    if(foot){
+      var last = all[0];
+      foot.textContent = all.length + "건 · 최신순" + (last && last.time ? " · 마지막 " + last.time : "") +
+                         (aiReady() ? " · Gemini가 이어서 말해요" : " · 준비된 대화로 이어져요");
+    }
+  }
+
+  function applyChatter(snap){
+    var val = snap && snap.val ? snap.val() : null;
+    if(!val || !Object.keys(val).length){
+      /* DB에 기록이 아직 없으면 지금 목록(기본 6건)을 올려 둡니다 */
+      if(state.chatter && state.chatter.length){
+        var bag = {};
+        state.chatter.forEach(function(c){
+          bag[c.id] = {who:c.who, text:c.text, topic:c.topic || "", ts:c.ts, time:c.time || ""};
+        });
+        dbPut("chatter", bag);
+      }
+      return;
+    }
+    state.chatter = chatterArray(val);
+    saveState();
+    renderChatter();
+  }
+
+  function publishChatter(lines, topic){
+    (lines || []).forEach(function(l, i){
+      setTimeout(function(){
+        pushChatter({who:l.who, text:l.text, topic:l.topic || topic || ""});
+      }, i * 900);
+    });
+  }
+
+  function addPoolExchange(silent){
+    var ex = CHATTER_POOL[chatterPoolIdx % CHATTER_POOL.length];
+    chatterPoolIdx++;
+    publishChatter(ex.lines, ex.topic);
+    if(!silent) toast("비서들이 '" + ex.topic + "' 이야기를 나누고 있어요 💬", 2400);
+  }
+
+  function chatterContext(n){
+    return sortedChatter(state.chatter || []).slice(0, n).reverse().map(function(c){
+      var p = PEOPLE[c.who] || PEOPLE.mong;
+      return p.name + ": " + String(c.text).replace(/\s+/g, " ").slice(0, 170);
+    }).join("\n");
+  }
+
+  function chatterGeminiBody(model){
+    var roster = Object.keys(CHATTER_VOICE).map(function(id){
+      return "- " + PEOPLE[id].name + " (" + PEOPLE[id].role + "): " + CHATTER_VOICE[id];
+    }).join("\n");
+    var sys =
+      "당신은 김민선 님의 비서실에서 다섯 비서가 서로 주고받는 짧은 업무 대화를 쓰는 작가입니다.\n" +
+      "아래 인물 설정과 실제 맥락을 지키면서, 바로 앞 대화를 자연스럽게 이어받는 2~3줄을 만듭니다.\n\n" +
+      roster + "\n\n" + MINSEON_CTX +
+      "\n규칙:\n" +
+      "- JSON 배열 하나만 출력합니다. 설명·코드펜스 없이 배열만.\n" +
+      "- 원소는 {\"who\":\"mong|sunny|han|daon|byul\",\"text\":\"...\",\"topic\":\"...\"} 형태입니다.\n" +
+      "- 서로 다른 비서 2~3명이 차례로 말하고, 앞사람 말을 받아 이어 갑니다.\n" +
+      "- 한 줄은 1~2문장 120자 이내, 이모지는 0~1개, 한국어 존댓말 평문입니다.\n" +
+      "- 민선 님은 3인칭으로 '민선 님'이라 부르고, 민선 님이 바로 답하는 대화는 쓰지 않습니다.\n" +
+      "- 확정되지 않은 일정·금액·수치를 새로 만들지 않습니다. 맥락에 있는 것만 씁니다.\n" +
+      "- 앞 대화의 문장을 그대로 반복하지 않습니다.\n" +
+      "- topic은 두세 단어 주제어입니다(예: 43번지혼술바, 세무·환율, 청약 점검).";
+    var userText =
+      "오늘은 " + todayKor() + "입니다.\n" +
+      "지금까지의 비서들 대화(최신이 아래):\n" + (chatterContext(6) || "(없음)") + "\n\n" +
+      "이 대화 바로 다음에 이어질 2~3줄을 JSON 배열로 출력하세요.";
+    var cfg = genConfig(model, 900);
+    cfg.responseMimeType = "application/json";
+    cfg.responseSchema = {
+      type:"ARRAY",
+      items:{ type:"OBJECT",
+        properties:{who:{type:"STRING"}, text:{type:"STRING"}, topic:{type:"STRING"}},
+        required:["who", "text"] }
+    };
+    return {
+      systemInstruction:{parts:[{text:sys}]},
+      contents:[{role:"user", parts:[{text:userText}]}],
+      generationConfig: cfg
+    };
+  }
+
+  function parseChatterReply(raw){
+    var s = String(raw || "").trim();
+    s = s.replace(/^```(?:json)?/i, "").replace(/```\s*$/, "").trim();
+    var a = s.indexOf("["), b = s.lastIndexOf("]");
+    if(a >= 0 && b > a) s = s.slice(a, b + 1);
+    var val = null;
+    try{ val = JSON.parse(s); }catch(e){ return null; }
+    if(val && !Array.isArray(val)) val = val.lines || val.replies || [val];
+    if(!Array.isArray(val)) return null;
+    var out = [];
+    val.forEach(function(o){
+      if(!o || typeof o !== "object") return;
+      var id = whoId(o.who || o.name || o.id || o.speaker);
+      var tx = String(o.text || o.reply || o.message || "").trim();
+      if(!id || !tx) return;
+      out.push({who:id, text:cleanReply(tx).slice(0, 200), topic:String(o.topic || "").trim().slice(0, 14)});
+    });
+    return out.length ? out.slice(0, 3) : null;
+  }
+
+  function callChatterGemini(){
+    var idx = 0;
+    function attempt(){
+      var model = GEMINI_MODELS[idx];
+      return geminiPost(chatterGeminiBody(model), model).then(function(raw){
+        var lines = parseChatterReply(raw);
+        if(!lines) throw {status:0, msg:"빈 응답", model:model.id};
+        return lines;
+      }).catch(function(err){
+        if(modelFallbackOk(err) && (idx + 1) < GEMINI_MODELS.length){ idx++; return attempt(); }
+        throw err;
+      });
+    }
+    return attempt();
+  }
+
+  function setChatterBusy(on){
+    var b = document.getElementById("chatterNext");
+    if(!b) return;
+    b.disabled = !!on;
+    b.textContent = on ? "💬 대화 만드는 중…" : "🪄 비서끼리 한마디";
+  }
+
+  function nextChatter(manual){
+    if(chatterBusy) return;
+    if(!aiReady()){ addPoolExchange(!manual); return; }
+    chatterBusy = true;
+    setChatterBusy(true);
+    callChatterGemini().then(function(lines){
+      chatterBusy = false; setChatterBusy(false);
+      publishChatter(lines, "");
+      if(manual) toast("비서들이 대화를 이어 갔어요 💬", 2000);
+    }).catch(function(){
+      chatterBusy = false; setChatterBusy(false);
+      if(manual) toast("Gemini 대화를 못 받아 준비된 대화로 이어갈게요", 4200);
+      addPoolExchange(true);
+    });
+  }
+
+  function refreshChatter(){
+    renderChatter();
+    if(fdb){
+      try{
+        fdb.ref(DB_ROOT + "/chatter").once("value").then(function(snap){ applyChatter(snap); }).catch(function(){});
+      }catch(e){}
+    }
+    toast("비서들 대화 목록을 새로 고쳤어요 🔄", 1600);
+  }
+
+  function startChatter(){
+    if(chatterTimer) return;
+    chatterTimer = setInterval(function(){
+      if(document.hidden || chatterBusy) return;
+      var act = document.querySelector(".panel.active");
+      /* 오피스·회의실을 보고 있을 때만 새 대화를 만듭니다(호출·데이터 절약) */
+      if(!act || (act.id !== "panel-office" && act.id !== "panel-meeting")) return;
+      nextChatter(false);
+    }, CHATTER_EVERY * 1000);
+  }
+
   /* ── 탭 전환 ────────────────────────────── */
   function switchTab(name){
     Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(b){
@@ -2787,6 +3251,23 @@
     renderTasks();
     renderTeam();
     renderMemos();
+    renderChatter();
+
+    var chatterNextBtn = document.getElementById("chatterNext");
+    if(chatterNextBtn){ chatterNextBtn.addEventListener("click", function(e){ e.stopPropagation(); nextChatter(true); }); }
+    var chatterRefreshBtn = document.getElementById("chatterRefresh");
+    if(chatterRefreshBtn){ chatterRefreshBtn.addEventListener("click", function(){ refreshChatter(); }); }
+    var meetingChatterBtn = document.getElementById("meetingChatterBtn");
+    if(meetingChatterBtn){
+      meetingChatterBtn.addEventListener("click", function(){
+        switchTab("office");
+        var card = document.getElementById("chatterCard");
+        if(card && card.scrollIntoView){ card.scrollIntoView({behavior:"smooth", block:"start"}); }
+        toast("비서들끼리 대화 로그로 이동했어요 💬", 1800);
+      });
+    }
+    startChatter();
+
     switchTab("office");
     initDb();
 
