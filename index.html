@@ -2992,12 +2992,15 @@
     });
   }
 
-  /* 최근 대화와 같은 문장이 없는 주제를 골라 이어 갑니다 */
+  /* 최근 대화와 같은 주제·같은 문장은 건너뛰고 다음 주제를 고릅니다 */
   function pickPoolExchange(){
-    var recent = sortedChatter(state.chatter || []).slice(0, 9).map(function(c){ return String(c.text); });
+    var recent = sortedChatter(state.chatter || []).slice(0, 8);
+    var topics = recent.map(function(c){ return String(c.topic || ""); });
+    var texts  = recent.map(function(c){ return String(c.text); });
     for(var k = 0; k < CHATTER_POOL.length; k++){
       var cand = CHATTER_POOL[(chatterPoolIdx + k) % CHATTER_POOL.length];
-      var dup = cand.lines.some(function(l){ return recent.indexOf(l.text) !== -1; });
+      if(topics.indexOf(cand.topic) !== -1) continue;
+      var dup = cand.lines.some(function(l){ return texts.indexOf(l.text) !== -1; });
       if(!dup){ chatterPoolIdx = (chatterPoolIdx + k + 1) % CHATTER_POOL.length; return cand; }
     }
     var ex = CHATTER_POOL[chatterPoolIdx % CHATTER_POOL.length];
