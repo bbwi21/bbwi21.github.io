@@ -2992,9 +2992,21 @@
     });
   }
 
-  function addPoolExchange(silent){
+  /* 최근 대화와 같은 문장이 없는 주제를 골라 이어 갑니다 */
+  function pickPoolExchange(){
+    var recent = sortedChatter(state.chatter || []).slice(0, 9).map(function(c){ return String(c.text); });
+    for(var k = 0; k < CHATTER_POOL.length; k++){
+      var cand = CHATTER_POOL[(chatterPoolIdx + k) % CHATTER_POOL.length];
+      var dup = cand.lines.some(function(l){ return recent.indexOf(l.text) !== -1; });
+      if(!dup){ chatterPoolIdx = (chatterPoolIdx + k + 1) % CHATTER_POOL.length; return cand; }
+    }
     var ex = CHATTER_POOL[chatterPoolIdx % CHATTER_POOL.length];
-    chatterPoolIdx++;
+    chatterPoolIdx = (chatterPoolIdx + 1) % CHATTER_POOL.length;
+    return ex;
+  }
+
+  function addPoolExchange(silent){
+    var ex = pickPoolExchange();
     publishChatter(ex.lines, ex.topic);
     if(!silent) toast("비서들이 '" + ex.topic + "' 이야기를 나누고 있어요 💬", 2400);
   }
